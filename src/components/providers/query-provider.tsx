@@ -1,23 +1,15 @@
 "use client";
 import { useState } from "react";
-import { QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PersistQueryClientProvider, type Persister } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { del, get, set } from "idb-keyval";
 
 /**
  * Data cache saved on the phone (IndexedDB) so the installed app opens instantly
  * and still shows the last data when the network is weak.
+ * On the server there is no IndexedDB, so a plain provider renders the same markup.
  */
-const persister =
-  typeof window === "undefined"
-    ? undefined
-    : createAsyncStoragePersister({
-        storage: { getItem: get, setItem: set, removeItem: del },
-        key: "ssquare-cache",
-        throttleTime: 1000,
-      });
-
 export function QueryProvider({ children, userId }: { children: React.ReactNode; userId?: string }) {
   const [client] = useState(
     () =>
@@ -34,8 +26,17 @@ export function QueryProvider({ children, userId }: { children: React.ReactNode;
         },
       }),
   );
+  const [persister] = useState<Persister | undefined>(() =>
+    typeof window === "undefined"
+      ? undefined
+      : createAsyncStoragePersister({
+          storage: { getItem: get, setItem: set, removeItem: del },
+          key: "ssquare-cache",
+          throttleTime: 1000,
+        }),
+  );
 
-  if (!persister) return null;
+  if (!persister) return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
   return (
     <PersistQueryClientProvider
       client={client}

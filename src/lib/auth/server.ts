@@ -24,7 +24,8 @@ export const getStaff = cache(async (): Promise<Profile | null> => {
 /** Use at the top of staff pages / actions. Redirects when not allowed. */
 export async function requireStaff(need?: Permission | "owner"): Promise<Profile> {
   const profile = await getStaff();
-  if (!profile) redirect("/staff/login");
+  // Logged in (middleware checked) but no active profile → account was turned off: end the session.
+  if (!profile) redirect("/staff/signout?reason=inactive");
   if (need === "owner" ? profile.role !== "owner" : need && !can(profile, need)) redirect("/staff");
   return profile;
 }
