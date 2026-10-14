@@ -1,0 +1,28 @@
+# Weekly database backup (free). Add the repository secret SUPABASE_DB_URL:
+# Supabase → Project Settings → Database → Connection string (URI, "Session pooler").
+# Backups are kept as downloadable workflow artifacts for 90 days.
+name: Weekly database backup
+
+on:
+  schedule:
+    - cron: "0 22 * * 0" # Every Sunday 3:30 AM IST
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump database
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          stamp=$(date -u +%Y-%m-%d)
+          docker run --rm -e DB_URL postgres:17 sh -c \
+            'pg_dump "$DB_URL" --no-owner --no-privileges --schema=public --schema=auth --format=custom' > ssquare-$stamp.dump
+          ls -lh ssquare-$stamp.dump
+      - name: Upload backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssquare-db-backup
+          path: ssquare-*.dump
+          retention-days: 90

@@ -4,10 +4,25 @@
     "clear": "Clear",
     "durationH": "{h} hr",
     "durationM": "{m} min",
-    "sports": { "cricket": "Cricket", "football": "Football" },
-    "status": { "confirmed": "Booked", "completed": "Completed", "cancelled": "Cancelled" },
-    "methods": { "upi": "UPI", "cash": "Cash", "card": "Card", "bank": "Bank transfer" },
-    "extras": { "water": "Water bottle", "coldDrink": "Cold drink" },
+    "sports": {
+      "cricket": "Cricket",
+      "football": "Football"
+    },
+    "status": {
+      "confirmed": "Booked",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "methods": {
+      "upi": "UPI",
+      "cash": "Cash",
+      "card": "Card",
+      "bank": "Bank transfer"
+    },
+    "extras": {
+      "water": "Water bottle",
+      "coldDrink": "Cold drink"
+    },
     "expenseCategories": {
       "maintenance": "Maintenance",
       "electricity": "Electricity",
@@ -49,12 +64,30 @@
     "android2": "Tap \"Install app\" or \"Add to Home screen\"."
   },
   "permissions": {
-    "today_bookings": { "label": "Today's bookings", "desc": "See today's bookings, take payment, complete or cancel." },
-    "all_bookings": { "label": "All bookings", "desc": "See and handle bookings of any date." },
-    "create_booking": { "label": "Add bookings", "desc": "Create new bookings." },
-    "expenses": { "label": "Expenses", "desc": "Add and see expenses." },
-    "analytics": { "label": "Analytics", "desc": "See earnings and usage numbers." },
-    "reports": { "label": "Reports", "desc": "Download Excel / PDF reports." }
+    "today_bookings": {
+      "label": "Today's bookings",
+      "desc": "See today's bookings, take payment, complete or cancel."
+    },
+    "all_bookings": {
+      "label": "All bookings",
+      "desc": "See and handle bookings of any date."
+    },
+    "create_booking": {
+      "label": "Add bookings",
+      "desc": "Create new bookings."
+    },
+    "expenses": {
+      "label": "Expenses",
+      "desc": "Add and see expenses."
+    },
+    "analytics": {
+      "label": "Analytics",
+      "desc": "See earnings and usage numbers."
+    },
+    "reports": {
+      "label": "Reports",
+      "desc": "Download Excel / PDF reports."
+    }
   },
   "staff": {
     "login": {
@@ -114,8 +147,15 @@
       "viewProof": "View payment screenshot",
       "completedBy": "Completed by {name} at {time}",
       "cancelledBy": "Cancelled by {name}",
-      "advance": { "kept": "Advance kept", "refunded": "Advance refunded" },
-      "kind": { "advance": "Advance", "settlement": "Payment", "refund": "Refund" },
+      "advance": {
+        "kept": "Advance kept",
+        "refunded": "Advance refunded"
+      },
+      "kind": {
+        "advance": "Advance",
+        "settlement": "Payment",
+        "refund": "Refund"
+      },
       "takePayment": "Take payment & complete",
       "cancel": "Cancel booking",
       "completeTitle": "Take payment",
@@ -150,8 +190,14 @@
         "other": "Other"
       },
       "advanceQuestion": "Advance paid: {amount}. What to do?",
-      "kept": { "title": "Keep advance", "desc": "Counted in earnings" },
-      "refunded": { "title": "Refund advance", "desc": "Money returned to customer" },
+      "kept": {
+        "title": "Keep advance",
+        "desc": "Counted in earnings"
+      },
+      "refunded": {
+        "title": "Refund advance",
+        "desc": "Money returned to customer"
+      },
       "submit": "Yes, cancel booking",
       "success": "Booking cancelled. The time is free again."
     },
@@ -235,7 +281,10 @@
       "delete": "Delete expense",
       "deleted": "Expense deleted",
       "confirmDelete": "Delete this expense?",
-      "errors": { "amount": "Enter the amount.", "description": "Write what it was for." }
+      "errors": {
+        "amount": "Enter the amount.",
+        "description": "Write what it was for."
+      }
     },
     "range": {
       "label": "Period",
@@ -302,7 +351,10 @@
       "unsupported": "This phone does not support notifications here. On iPhone, install the app first (iOS 16.4 or newer)."
     },
     "more": {
-      "roles": { "owner": "Owner", "caretaker": "Caretaker" },
+      "roles": {
+        "owner": "Owner",
+        "caretaker": "Caretaker"
+      },
       "analytics": "Analytics",
       "reports": "Reports (Excel / PDF)",
       "settings": "Settings",
@@ -334,7 +386,10 @@
       "create": "Create account",
       "staffAdded": "Account created",
       "you": "you",
-      "roles": { "owner": "Owner", "caretaker": "Caretaker" },
+      "roles": {
+        "owner": "Owner",
+        "caretaker": "Caretaker"
+      },
       "inactive": "Turned off",
       "permissionsTitle": "What this person can do",
       "saved": "Saved",
@@ -350,7 +405,11 @@
       "ratesTitle": "Rates (₹ per hour)",
       "ratesHelp": "Used to auto-fill booking totals and shown on the website. Weekday/weekend rates win over \"All days\".",
       "dayType": "Days",
-      "dayTypes": { "all": "All days", "weekday": "Mon – Fri", "weekend": "Sat – Sun" },
+      "dayTypes": {
+        "all": "All days",
+        "weekday": "Mon – Fri",
+        "weekend": "Sat – Sun"
+      },
       "pricePerHour": "Price per hour",
       "hr": "hr",
       "from": "From",
@@ -361,6 +420,252 @@
       "save": "Save",
       "ratesSaved": "Rates saved",
       "ratesStepNote": "Totals are calculated every {step} minutes, so a booking crossing two rates is charged correctly."
+    }
+  },
+  "public": {
+    "meta": {
+      "homeTitle": "SSquare Nadiad – Pickleball Court & Box Cricket / Football Turf | Open 24 Hours",
+      "homeDescription": "SSquare Sports Arena, Nadiad: the only synthetic pickleball court in Nadiad and a well-kept turf for box cricket and football. Open 24 hours. Check free slots and book on WhatsApp.",
+      "availabilityTitle": "Check Free Slots – Turf & Pickleball in Nadiad | SSquare",
+      "availabilityDescription": "See live free and booked times for the SSquare turf and pickleball court in Nadiad, for today or any date. Book easily on WhatsApp or call.",
+      "pickleballTitle": "Pickleball Court in Nadiad – Only Synthetic Court | SSquare",
+      "pickleballDescription": "Play pickleball in Nadiad on the city's only synthetic pickleball court at SSquare. Good grip, proper lines and lights. Open 24 hours. Check slots and book.",
+      "turfTitle": "Box Cricket & Football Turf in Nadiad | SSquare – Open 24 Hours",
+      "turfDescription": "Book the SSquare turf in Nadiad for box cricket or football with friends, family or office team. Floodlights for night games, open 24 hours.",
+      "contactTitle": "Contact & Location – SSquare Sports Arena, Nadiad",
+      "contactDescription": "Call or WhatsApp SSquare Sports Arena, Nadiad. Get directions on Google Maps. Open 24 hours, all days."
+    },
+    "nav": {
+      "availability": "Free slots",
+      "courts": "Courts & rates",
+      "pickleball": "Pickleball",
+      "turf": "Cricket & Football",
+      "gallery": "Photos",
+      "location": "Location",
+      "contact": "Contact",
+      "book": "Book now",
+      "menu": "Menu",
+      "staff": "Staff login",
+      "skip": "Skip to content"
+    },
+    "cta": {
+      "call": "Call",
+      "whatsapp": "WhatsApp",
+      "slots": "Free slots",
+      "whatsappGeneral": "Hello SSquare 🙏 I would like to know about booking."
+    },
+    "hero": {
+      "badge": "Only synthetic pickleball court in Nadiad",
+      "title": "Play anytime at SSquare, Nadiad",
+      "subtitle": "Turf for box cricket & football, and a proper synthetic pickleball court. Open 24 hours — early morning or late night, the time is yours.",
+      "checkSlots": "Check free slots",
+      "whatsapp": "Book on WhatsApp",
+      "points": {
+        "open": "Open 24 × 7",
+        "lights": "Bright floodlights",
+        "family": "Safe for families"
+      }
+    },
+    "availability": {
+      "title": "Check free slots",
+      "subtitle": "Green means free, red means booked. Tap a free time to book on WhatsApp or call.",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "pickDate": "Pick another date",
+      "legendFree": "Free",
+      "legendBooked": "Booked",
+      "legendPast": "Time over",
+      "parts": {
+        "night": "Late night",
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening"
+      },
+      "freeHours": "{count, plural, =0 {Fully booked} one {# hour free} other {# hours free}}",
+      "status": {
+        "free": "Free",
+        "booked": "Booked",
+        "past": "Time over",
+        "freeFrom": "Free from {time}",
+        "freeUntil": "Free till {time}",
+        "partly": "Partly free"
+      },
+      "loading": "Loading slots…",
+      "error": "Could not load slots. Please call or WhatsApp us.",
+      "retry": "Try again",
+      "updated": "Updates automatically",
+      "sheetTitle": "Book this time",
+      "freeWindow": "Free from {from} to {to}",
+      "sheetNote": "Your booking is confirmed once our team replies. Advance may be needed for some times.",
+      "callName": "Call {name}"
+    },
+    "why": {
+      "title": "Why players choose SSquare",
+      "subtitle": "A clean, well-kept place to play — for friends, families, students and office teams.",
+      "items": {
+        "onlyPickleball": {
+          "title": "Only synthetic pickleball court in Nadiad",
+          "text": "Proper surface with good grip and clear lines — the real way pickleball should be played."
+        },
+        "open24": {
+          "title": "Open 24 hours",
+          "text": "Before office, after college or late night — choose the time that suits you."
+        },
+        "quality": {
+          "title": "Well-kept turf",
+          "text": "Good quality turf for box cricket and football, cleaned and checked regularly."
+        },
+        "lights": {
+          "title": "Bright floodlights",
+          "text": "Even lighting so night games feel just like day games."
+        },
+        "family": {
+          "title": "Safe & friendly place",
+          "text": "A decent, family-friendly atmosphere. Everyone is welcome."
+        },
+        "booking": {
+          "title": "Easy booking",
+          "text": "See free times here and book in one message on WhatsApp."
+        }
+      }
+    },
+    "courts": {
+      "title": "Our courts & rates",
+      "subtitle": "Simple rates per hour. Book for 1 hour, 1½ hours or more.",
+      "perHour": "/ hour",
+      "dayTypes": {
+        "all": "All days",
+        "weekday": "Mon – Fri",
+        "weekend": "Sat – Sun"
+      },
+      "ratesNote": "Rates may change on special days. Please confirm while booking.",
+      "noRates": "Please call for rates.",
+      "seeSlots": "See free slots",
+      "learnMore": "Know more",
+      "turf": {
+        "title": "Turf – Box Cricket & Football",
+        "text": "One common turf for cricket and football. Great for friends, office teams and weekend matches."
+      },
+      "pickleball": {
+        "title": "Pickleball Court",
+        "text": "Nadiad's only synthetic pickleball court. Easy to learn, fun for all ages."
+      }
+    },
+    "amenities": {
+      "title": "Facilities",
+      "lights": "Floodlights",
+      "parking": "Parking",
+      "water": "Drinking water",
+      "washroom": "Washroom",
+      "seating": "Seating area",
+      "equipment": "Equipment on request",
+      "cctv": "CCTV",
+      "open24": "Open 24 hours"
+    },
+    "gallery": {
+      "title": "Photos",
+      "alt": {
+        "turfDay": "SSquare turf in Nadiad during the day",
+        "pickleball": "Synthetic pickleball court at SSquare Nadiad",
+        "turfNight": "SSquare turf under floodlights at night",
+        "pickleballPlay": "Players enjoying pickleball at SSquare"
+      }
+    },
+    "reviews": {
+      "title": "What players say",
+      "basedOn": "{count, plural, one {Based on # Google review} other {Based on # Google reviews}}",
+      "fromGoogle": "Reviews from Google",
+      "seeAll": "See all reviews on Google",
+      "write": "Write a review",
+      "fallback": "Played at SSquare? We would love to hear from you."
+    },
+    "location": {
+      "title": "How to reach",
+      "directions": "Get directions",
+      "openMaps": "Open in Google Maps",
+      "mapTitle": "Map showing SSquare Sports Arena, Nadiad"
+    },
+    "faq": {
+      "title": "Common questions",
+      "items": {
+        "hours": {
+          "q": "What are the timings?",
+          "a": "SSquare is open 24 hours, all 7 days. You can book any time — early morning, afternoon or late night."
+        },
+        "book": {
+          "q": "How do I book a slot?",
+          "a": "Check free slots on this page, then tap a free time to send us a WhatsApp message or call us. Your booking is confirmed when our team replies."
+        },
+        "duration": {
+          "q": "Can I book for 1½ hours or more?",
+          "a": "Yes. You can book for 1 hour, 1½ hours, 2 hours or longer, as long as the time is free."
+        },
+        "pickleball": {
+          "q": "I have never played pickleball. Can I still come?",
+          "a": "Of course! Pickleball is easy to learn and fun for all ages. Ask us and we will be happy to guide you."
+        },
+        "sports": {
+          "q": "Which sports can be played on the turf?",
+          "a": "The turf is used for box cricket and football. One group can book it at a time."
+        },
+        "payment": {
+          "q": "How can I pay?",
+          "a": "You can pay by UPI or cash. For some times, a small advance may be needed to confirm the booking."
+        },
+        "cancel": {
+          "q": "What if I need to cancel?",
+          "a": "Please inform us as early as possible on call or WhatsApp so the time can be given to others."
+        }
+      }
+    },
+    "contact": {
+      "title": "Contact us",
+      "subtitle": "We are happy to help. Call or WhatsApp any time.",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "hours": "Timings",
+      "hoursValue": "Open 24 hours, all days",
+      "owners": "Owners"
+    },
+    "landing": {
+      "pickleball": {
+        "h1": "Pickleball court in Nadiad",
+        "intro": "SSquare has the only synthetic pickleball court in Nadiad. The surface gives good grip and a true bounce, and the court is marked with proper lines. Whether you are new to pickleball or play regularly, you will enjoy every game here.",
+        "points": [
+          "Synthetic surface with good grip",
+          "Proper court lines and net",
+          "Floodlights for night games",
+          "Open 24 hours — play any time",
+          "Friendly place for families and beginners"
+        ],
+        "whatTitle": "What is pickleball?",
+        "what": "Pickleball is a paddle sport that mixes parts of tennis, badminton and table tennis. It is easy to learn, gentle on the body and great fun for all ages — that is why it is becoming popular across India."
+      },
+      "turf": {
+        "h1": "Box cricket & football turf in Nadiad",
+        "intro": "Bring your friends, family or office team for a match at the SSquare turf in Nadiad. One common turf is used for box cricket and football, so your group gets the full ground for your time.",
+        "points": [
+          "Good quality turf, kept clean",
+          "Box cricket and football on the same turf",
+          "Bright floodlights for night matches",
+          "Open 24 hours, all days",
+          "Easy WhatsApp booking"
+        ],
+        "whatTitle": "Plan your match",
+        "what": "Choose a free time below, tell us how long you want to play (1 hour, 1½ hours or more), and send a WhatsApp message. Our team will confirm your booking."
+      }
+    },
+    "footer": {
+      "tagline": "Turf & pickleball in Nadiad. Open 24 hours.",
+      "quickLinks": "Quick links",
+      "rights": "© {year} SSquare Sports Arena, Nadiad. All rights reserved.",
+      "language": "Language"
+    },
+    "notFound": {
+      "title": "Page not found",
+      "text": "The page you are looking for is not here.",
+      "home": "Go to home page"
     }
   }
 }

@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SSquare Sports Arena — Website & Staff App
 
-## Getting Started
+Website and installable staff app for **SSquare, Nadiad**: one common turf (box cricket + football) and Nadiad's only synthetic pickleball court, open 24 hours.
 
-First, run the development server:
+- **Public website** (English / ગુજરાતી / हिन्दी): live slot availability, rates, photos, Google reviews, map, FAQ. Built for local SEO.
+- **Staff app** (`/staff`, installable on Android & iPhone): bookings with WhatsApp confirmation, payments (UPI / cash, who collected the cash), expenses, analytics, Excel / PDF reports, caretaker permissions and push notifications.
 
+Stack: Next.js 15 (App Router, TypeScript) · Tailwind CSS 4 · Supabase (Postgres, Auth, Storage, Realtime) · next-intl · TanStack Query · Web Push.
+
+---
+
+## 1. One-time setup
+
+### Supabase
+1. Create a free project at [supabase.com](https://supabase.com), region **Mumbai (ap-south-1)**.
+2. **SQL Editor** → run [`supabase/migrations/20261014000001_init.sql`](supabase/migrations/20261014000001_init.sql), then [`supabase/seed.sql`](supabase/seed.sql).
+3. **Authentication → Sign In / Providers → Email**: turn **off** "Allow new users to sign up". Only owners create accounts, from the app.
+4. **Project Settings → API**: copy the URL, the `anon` key and the `service_role` key.
+
+### Environment
+```bash
+cp .env.example .env.local
+```
+Fill in `.env.local`:
+
+| Variable | Where it comes from |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | `npm run vapid:generate` |
+| `GOOGLE_PLACES_API_KEY`, `GOOGLE_PLACE_ID` | Google Cloud → enable **Places API (New)** → create a key restricted to that API. Find the Place ID with Google's Place ID Finder. A billing account is required; daily caching keeps usage inside the free monthly quota. |
+| `NEXT_PUBLIC_SITE_URL` | Your live domain, e.g. `https://ssquarenadiad.in` |
+| `CRON_SECRET` | Any long random string |
+| `SEED_*_PASSWORD` | Starting passwords for shail / shubh / ravi (8+ characters) |
+
+### Create the staff accounts
+```bash
+npm install
+npm run seed:users
+```
+This creates **shail** and **shubh** (owners, full access) and **ravi** (caretaker, today's bookings only). Owners can add, remove and change caretakers later in **Settings**.
+
+### Run locally
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+Website: http://localhost:3000. Staff app: http://localhost:3000/staff
+
+---
+
+## 2. Things you will change often (no coding needed)
+
+| What | Where |
+|---|---|
+| Phone numbers, WhatsApp number, address, map, Instagram, amenities, gallery photos | [`src/config/site.ts`](src/config/site.ts) |
+| Booking step, duration chips, extra items (water ₹20…), expense types, screenshot retention | [`src/config/business.ts`](src/config/business.ts) |
+| Caretaker permission list and defaults | [`src/config/permissions.ts`](src/config/permissions.ts) |
+| WhatsApp booking message, enquiry message, push notification text | [`src/config/messages.ts`](src/config/messages.ts) |
+| All website / app wording (3 languages) | [`messages/en.json`](messages/en.json), [`gu.json`](messages/gu.json), [`hi.json`](messages/hi.json) |
+| **Rates, staff accounts, caretaker permissions** | In the app: **More → Settings** (no deploy needed) |
+
+**Photos:** put real photos in `public/images/gallery/` (JPG or WebP, about 1600 px wide) and list them in `siteConfig.gallery`. Next.js serves them resized and optimized.
+
+**Logo / app icon:** replace `scripts/assets/logo.svg`, then run `node scripts/generate-icons.mjs`.
+
+> Before going live, search the code for `TODO`. Every placeholder (phone numbers, address, map pin, rates in `seed.sql`) is marked.
+
+---
+
+## 3. Deploy (Vercel, free)
+
+1. Push this repo to GitHub and import it in Vercel.
+2. Add every variable from `.env.local` (except `SEED_*`) under **Project → Settings → Environment Variables**.
+3. Deploy, then add your domain. `vercel.json` sets the Mumbai region and a **daily cron**, which:
+   - keeps the Supabase free project from pausing, and
+   - deletes UPI screenshots older than 180 days.
+4. **Backups:** add the GitHub repository secret `SUPABASE_DB_URL` (Supabase → Database → Connection string → Session pooler URI). `.github/workflows/backup.yml` then saves a full database backup every Sunday, kept for 90 days.
+5. **Google:** create or claim the Google Business Profile, set its website to your domain, and submit `https://<domain>/sitemap.xml` in Google Search Console.
+
+---
+
+## 4. Installing the staff app on phones
+
+- **Android (Chrome):** open `https://<domain>/staff` → tap **Install app**.
+- **iPhone (Safari):** open `https://<domain>/staff` → Share → **Add to Home Screen** (the app shows these steps). Open it from the home screen and log in once.
+- **Notifications:** in the app, **More → Turn on notifications**. iPhone needs iOS 16.4+ and the app installed to the home screen.
+
+Staff stay logged in until they press **Log out**.
+
+---
+
+## 5. How it works
+
+```
+src/
+  app/[locale]/        Public website (en at "/", gu at "/gu", hi at "/hi"), statically generated
+  app/staff/           Staff app (login + guarded (app) routes)
+  app/api/cron/        Daily maintenance job
+  config/              Editable business config (see table above)
+  features/            bookings, expenses, analytics, reports, settings, notifications, public
+  lib/                 time (IST), slots, pricing, payments, reports (Excel/PDF), push, supabase clients
+supabase/migrations/   Schema, Row Level Security, RPCs
+supabase/tests/        SQL behaviour checks (RLS + RPCs)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **No double booking:** a Postgres exclusion constraint makes overlapping bookings on the same court impossible, even if two phones save at the same moment.
+- **Security:** every table uses Row Level Security. Caretakers can only read what their permissions allow, and the public site only receives busy times (no names or phone numbers).
+- **Money:** each payment stores its method (UPI / cash) and **who received it**, so cash per person is always known. Cancelling asks whether to keep or refund the advance.
+- **Times:** everything is calculated in India Standard Time. Bookings may cross midnight.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Checks
+```bash
+npm run lint && npm run typecheck && npm test
+```
+To run the SQL behaviour checks against a disposable Postgres with the migration applied:
+```bash
+psql -f supabase/tests/rls_and_rpcs.sql
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 6. Supabase free tier — how long will it last?
 
-To learn more about Next.js, take a look at the following resources:
+| Resource | Free limit | SSquare usage (busy estimate) |
+|---|---|---|
+| Database | 500 MB | ~15 MB / year, so decades |
+| File storage | 1 GB | UPI screenshots compressed to ~80 KB, auto-deleted after 180 days, so it stays well below 1 GB |
+| Bandwidth | 5 GB / month | Small JSON only; photos are served by Vercel |
+| Monthly active users | 50,000 | A handful of staff |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Upgrade to Pro ($25/month) only if you want Supabase-managed daily backups or point-in-time restore. The free weekly GitHub backup above covers the basics.

@@ -3,8 +3,9 @@ import imageCompression from "browser-image-compression";
 import { businessConfig } from "@/config/business";
 import { getSupabase } from "@/lib/supabase/client";
 import { istDateStr } from "@/lib/time";
+import { PROOF_BUCKET } from "./upload-constants";
 
-export const PROOF_BUCKET = "payment-proofs";
+export { PROOF_BUCKET };
 
 /** Compresses a UPI screenshot on the phone (~80 KB WebP) and uploads it. Returns the storage path. */
 export async function uploadPaymentProof(file: File, bookingId: string): Promise<string> {
