@@ -8,9 +8,9 @@ import { getGoogleReviews } from "@/lib/google-reviews";
 
 function Stars({ value, className = "size-4" }: { value: number; className?: string }) {
   return (
-    <span className="inline-flex" aria-label={`${value} / 5`}>
+    <span className="inline-flex gap-0.5" aria-label={`${value} / 5`}>
       {Array.from({ length: 5 }, (_, i) => (
-        <Star key={i} className={`${className} ${i < Math.round(value) ? "fill-amber-400 text-amber-400" : "text-zinc-300"}`} aria-hidden />
+        <Star key={i} className={`${className} ${i < Math.round(value) ? "fill-gold text-gold" : "text-zinc-300"}`} aria-hidden />
       ))}
     </span>
   );
@@ -25,44 +25,44 @@ export async function Reviews() {
   const writeUrl = placeId ? `${siteConfig.maps.reviewUrl}${placeId}` : siteConfig.maps.directionsUrl;
 
   return (
-    <Section id="reviews" title={t("title")} tone="soft">
+    <Section id="reviews" tone="soft" kicker={t("kicker")} title={t("title")}>
       {data && data.count > 0 ? (
         <>
-          <div className="mb-6 flex flex-wrap items-center gap-4">
-            <span className="font-display text-5xl font-bold text-brand-950">{data.rating.toFixed(1)}</span>
+          <div className="mb-5 flex items-center gap-4">
+            <span className="text-[40px] leading-none font-extrabold tracking-tight text-ink">{data.rating.toFixed(1)}</span>
             <div>
-              <Stars value={data.rating} className="size-5" />
-              <p className="text-sm text-zinc-600">{t("basedOn", { count: data.count })}</p>
+              <Stars value={data.rating} />
+              <p className="text-sm text-zinc-500">{t("basedOn", { count: data.count })}</p>
             </div>
           </div>
-          <ul className="no-scrollbar relative -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
-            {data.reviews.map((r, i) => (
-              <li key={i} className="w-[85%] shrink-0 snap-center md:w-auto">
-                <blockquote className="flex h-full flex-col rounded-3xl bg-white p-5 shadow-sm ring-1 ring-zinc-200">
-                  <div className="flex items-center gap-3">
-                    {r.photo && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={r.photo} alt="" width={40} height={40} loading="lazy" referrerPolicy="no-referrer" className="size-10 rounded-full" />
-                    )}
-                    <div>
-                      <cite className="block font-semibold not-italic">
-                        {r.authorUrl ? <a href={r.authorUrl} target="_blank" rel="noopener noreferrer nofollow">{r.author}</a> : r.author}
-                      </cite>
-                      <span className="text-xs text-zinc-500">{r.when}</span>
-                    </div>
+          <ul className="grid gap-3.5 md:grid-cols-3">
+            {data.reviews.slice(0, 3).map((r, i) => (
+              <li key={i} className="flex flex-col rounded-[18px] border border-line bg-white p-5">
+                <Stars value={r.rating} className="size-3.5" />
+                <p className="mt-2.5 mb-4 line-clamp-5 flex-1 text-ink-2">{r.text}</p>
+                <div className="flex items-center gap-2.5 text-sm">
+                  {r.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={r.photo} alt="" width={32} height={32} loading="lazy" referrerPolicy="no-referrer" className="size-8 rounded-full" />
+                  ) : (
+                    <span className="grid size-8 place-items-center rounded-full bg-[#efe7d6] text-[13px] font-bold">{r.author.charAt(0)}</span>
+                  )}
+                  <div>
+                    <p className="font-bold text-ink">
+                      {r.authorUrl ? <a href={r.authorUrl} target="_blank" rel="noopener noreferrer nofollow">{r.author}</a> : r.author}
+                    </p>
+                    <p className="text-zinc-500">{r.when}</p>
                   </div>
-                  <Stars value={r.rating} className="mt-3 size-4" />
-                  <p className="mt-2 line-clamp-6 text-zinc-700">{r.text}</p>
-                </blockquote>
+                </div>
               </li>
             ))}
           </ul>
           <p className="mt-3 text-xs text-zinc-500">{t("fromGoogle")}</p>
         </>
       ) : (
-        <p className="text-lg text-zinc-600">{t("fallback")}</p>
+        <p className="text-lg text-ink-2">{t("fallback")}</p>
       )}
-      <div className="mt-6 flex flex-wrap gap-3">
+      <div className="mt-6 flex flex-wrap gap-2.5">
         {data?.mapsUrl && (
           <a href={data.mapsUrl} target="_blank" rel="noopener noreferrer" className={buttonClass("outline", "md")}>
             {t("seeAll")} <ExternalLink className="size-4" />

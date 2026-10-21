@@ -23,7 +23,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={t.id}
             className={cn(
               "flex max-w-md animate-fade-in items-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium text-white shadow-lg",
-              t.tone === "success" ? "bg-brand-800" : "bg-rose-600",
+              t.tone === "success" ? "bg-ink" : "bg-booked-ink",
             )}
           >
             {t.tone === "success" ? <CheckCircle2 className="size-5 shrink-0" /> : <AlertCircle className="size-5 shrink-0" />}

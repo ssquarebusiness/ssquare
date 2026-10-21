@@ -101,7 +101,7 @@ function DetailView({ booking: b, onMode }: { booking: BookingSummary; onMode: (
         <Row label={t("paid")}>{formatINR(b.paid_amount)}</Row>
         {active && (
           <Row label={t("remaining")} strong>
-            <span className={b.remaining_amount > 0 ? "text-rose-600" : "text-brand-700"}>{formatINR(b.remaining_amount)}</span>
+            <span className={b.remaining_amount > 0 ? "text-booked-ink" : "text-brand-700"}>{formatINR(b.remaining_amount)}</span>
           </Row>
         )}
         {isOwner && <Row label={t("bookedBy")}>{nameOf(b.booked_by)}</Row>}
@@ -126,7 +126,7 @@ function DetailView({ booking: b, onMode }: { booking: BookingSummary; onMode: (
         </p>
       )}
       {b.status === "cancelled" && (
-        <p className="rounded-xl bg-rose-50 p-3 text-sm text-rose-800">
+        <p className="rounded-xl bg-booked-soft p-3 text-sm text-booked-ink">
           {t("cancelledBy", { name: nameOf(b.cancelled_by) })}
           {b.cancel_reason ? ` — ${b.cancel_reason}` : ""}
           {b.advance_action ? ` · ${t(`advance.${b.advance_action}`)}` : ""}
@@ -186,7 +186,7 @@ function PaymentRow({ payment: p, showReceiver }: { payment: Payment; showReceiv
             {opening ? <Spinner className="size-4" /> : <ImageIcon className="size-5" />}
           </button>
         )}
-        <span className={cn("font-bold", p.kind === "refund" && "text-rose-600")}>
+        <span className={cn("font-bold", p.kind === "refund" && "text-booked-ink")}>
           {p.kind === "refund" ? "−" : ""}{formatINR(p.amount)}
         </span>
       </div>
@@ -277,7 +277,7 @@ function CompleteForm({ booking: b, onBack, onDone }: { booking: BookingSummary;
 
       <div className="rounded-2xl border-2 border-brand-200 bg-brand-50 p-4 text-center">
         <p className="text-sm text-brand-800">{t("collectNow")}</p>
-        <p className="font-display text-3xl font-bold text-brand-900">{formatINR(due)}</p>
+        <p className="text-3xl font-extrabold tracking-tight text-ink">{formatINR(due)}</p>
         <div className="mt-3 grid grid-cols-2 gap-2">
           <Button variant="outline" size="sm" onClick={() => fillAll("upi")}>{t("allUpi")}</Button>
           <Button variant="outline" size="sm" onClick={() => fillAll("cash")}>{t("allCash")}</Button>
@@ -367,7 +367,7 @@ function CancelForm({ booking: b, onBack, onDone }: { booking: BookingSummary; o
           <div className="grid grid-cols-2 gap-2">
             {(["kept", "refunded"] as const).map((a) => (
               <button key={a} type="button" onClick={() => setAction(a)} aria-pressed={action === a}
-                className={cn("rounded-xl border-2 p-3 text-left", action === a ? "border-brand-600 bg-brand-50" : "border-zinc-200")}>
+                className={cn("rounded-xl border-2 p-3 text-left", action === a ? "border-ink bg-soft" : "border-line")}>
                 <p className="font-semibold">{t(`${a}.title`)}</p>
                 <p className="text-xs text-zinc-500">{t(`${a}.desc`)}</p>
               </button>

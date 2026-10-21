@@ -92,7 +92,7 @@ function StaffCard({ profile: p }: { profile: Profile }) {
           {PERMISSIONS.map((perm) => (
             <label key={perm} className="flex items-start gap-3 rounded-xl px-1 py-2">
               <input type="checkbox" checked={perms.includes(perm)} onChange={() => toggle(perm)}
-                className="mt-0.5 size-5 shrink-0 accent-brand-700" />
+                className="mt-0.5 size-5 shrink-0 accent-ink" />
               <span>
                 <span className="block font-medium">{tp(`${perm}.label`)}</span>
                 <span className="block text-sm text-zinc-500">{tp(`${perm}.desc`)}</span>
@@ -157,7 +157,7 @@ function AddStaffSheet({ open, onClose }: { open: boolean; onClose: () => void }
   return (
     <Sheet open={open} onClose={onClose} title={t("addStaff")}>
       <div className="space-y-4">
-        <p className="rounded-xl bg-brand-50 p-3 text-sm text-brand-900">{t("addStaffNote")}</p>
+        <p className="rounded-xl bg-brand-50 p-3 text-sm text-brand-800">{t("addStaffNote")}</p>
         <Field label={t("displayName")} htmlFor="new-name">
           <Input id="new-name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
         </Field>

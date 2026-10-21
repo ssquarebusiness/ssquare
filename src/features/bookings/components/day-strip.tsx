@@ -36,13 +36,13 @@ export function DayStrip({
 
   return (
     <div aria-hidden className="pt-1">
-      <div className="relative h-7 overflow-hidden rounded-lg bg-free-soft ring-1 ring-emerald-200">
+      <div className="relative h-7 overflow-hidden rounded-lg bg-free-soft ring-1 ring-line">
         {booked.map((r) => (
           <div key={r.from} className="absolute inset-y-0 bg-booked/80" style={{ left: pct(r.from), width: pct(r.to - r.from) }} />
         ))}
         {sel && (
           <div
-            className={cn("absolute inset-y-0 rounded-md border-2", clash ? "border-rose-700 bg-rose-700/30" : "border-brand-800 bg-brand-600/40")}
+            className={cn("absolute inset-y-0 rounded-md border-2", clash ? "border-booked-ink bg-booked-ink/25" : "border-ink bg-ink/15")}
             style={{ left: pct(sel.from), width: pct(sel.to - sel.from) }}
           />
         )}

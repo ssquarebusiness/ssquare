@@ -1,36 +1,66 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   SSquare design tokens
-   Brand: deep turf green + pickleball lime. Slots: green = free, red = booked.
+   SSquare design tokens — "Clean Sage" theme
+   Warm white canvas, charcoal ink for text and primary buttons, soft sage
+   for highlights only. The logo keeps its own colours.
    --------------------------------------------------------------------------- */
 @theme {
-  --color-brand-50: #eefbf3;
-  --color-brand-100: #d6f5e1;
-  --color-brand-200: #b0eac7;
-  --color-brand-300: #7cd9a5;
-  --color-brand-400: #46c07f;
-  --color-brand-500: #22a463;
-  --color-brand-600: #15844f;
-  --color-brand-700: #126a42;
-  --color-brand-800: #125437;
-  --color-brand-900: #0b3d2e;
-  --color-brand-950: #062219;
+  /* Canvas & ink */
+  --color-canvas: #fbfaf7;
+  --color-soft: #f3f4ef;
+  --color-line: #e7e8e2;
+  --color-ink: #1f2420;
+  --color-ink-2: #4b524c;
+  --color-ink-hover: #343a35;
 
-  --color-ball-300: #e2fb7a;
-  --color-ball-400: #d4f53c;
-  --color-ball-500: #c2e812;
+  /* Warm greys (replaces Tailwind's cool zinc everywhere) */
+  --color-zinc-50: #fbfaf7;
+  --color-zinc-100: #f3f4ef;
+  --color-zinc-200: #e7e8e2;
+  --color-zinc-300: #d6d8d1;
+  --color-zinc-400: #a3a8a2;
+  --color-zinc-500: #7b827b;
+  --color-zinc-600: #5d645e;
+  --color-zinc-700: #4b524c;
+  --color-zinc-800: #343a35;
+  --color-zinc-900: #1f2420;
+  --color-zinc-950: #141815;
 
-  --color-free: #16a34a;
-  --color-free-soft: #dcfce7;
-  --color-booked: #e11d48;
-  --color-booked-soft: #ffe4e6;
-  --color-past: #d4d4d8;
+  /* Sage accent (named "brand" so existing highlights pick it up) */
+  --color-brand-50: #eef3ee;
+  --color-brand-100: #dfe9e0;
+  --color-brand-200: #c5d6c8;
+  --color-brand-300: #a9c2ae;
+  --color-brand-400: #8fb096;
+  --color-brand-500: #7f9f86;
+  --color-brand-600: #5f8268;
+  --color-brand-700: #4c6b54;
+  --color-brand-800: #3d5544;
+  --color-brand-900: #2f4035;
+  --color-brand-950: #1f2a23;
 
-  --font-sans: var(--font-noto), var(--font-noto-gu), var(--font-noto-hi), ui-sans-serif, system-ui,
+  /* Gold for ratings and small badges */
+  --color-gold: #d8b45a;
+  --color-gold-50: #f8efd6;
+  --color-gold-800: #7a5d16;
+
+  /* Slots: soft fills + readable text colours */
+  --color-free: #8cc3a0;
+  --color-free-soft: #e6f2ea;
+  --color-free-ink: #3f8a5a;
+  --color-booked: #e3a3a0;
+  --color-booked-soft: #f8e6e5;
+  --color-booked-ink: #b55a56;
+  --color-partial-ink: #9a7a2e;
+  --color-past: #e2e3de;
+
+  --font-sans: var(--font-jakarta), var(--font-noto-gu), var(--font-noto-hi), ui-sans-serif, system-ui,
     sans-serif;
-  --font-display: var(--font-display), var(--font-noto), var(--font-noto-gu), var(--font-noto-hi),
+  --font-display: var(--font-jakarta), var(--font-noto-gu), var(--font-noto-hi), ui-sans-serif,
     sans-serif;
+
+  --shadow-card: 0 1px 2px rgb(31 36 32 / 0.04), 0 8px 24px -12px rgb(31 36 32 / 0.12);
 
   --animate-sheet-up: sheet-up 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
   --animate-fade-in: fade-in 160ms ease-out;
@@ -61,7 +91,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-white font-sans text-zinc-900 antialiased;
+    @apply bg-canvas font-sans text-ink antialiased;
   }
   /* Installed app: no rubber-band overscroll, respect the notch. */
   @media (display-mode: standalone) {
@@ -70,7 +100,7 @@
     }
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-brand-500;
+    @apply outline-2 outline-offset-2 outline-brand-600;
   }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {

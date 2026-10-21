@@ -85,7 +85,7 @@ export const siteConfig = {
   heroImage: "/images/gallery/turf-night.svg",
 
   /** Brand colour used for the installed app / browser bar. */
-  themeColor: "#0b3d2e",
+  themeColor: "#fbfaf7",
 } as const;
 
 export type SiteConfig = typeof siteConfig;

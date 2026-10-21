@@ -61,7 +61,7 @@ export function BookingsBrowser({ initialDate }: { initialDate: DateStr }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{t("title")}</h1>
         {can("create_booking") && (
           <Link href={`/staff/bookings/new?date=${date}`} className={buttonClass("primary", "sm")}>
             <Plus className="size-4" /> {t("add")}

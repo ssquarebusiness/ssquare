@@ -33,7 +33,7 @@ export function ExpensesView() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold">{t("title")}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{t("title")}</h1>
         <Button size="sm" onClick={() => setOpen(true)}><Plus className="size-4" /> {t("add")}</Button>
       </div>
       <RangePicker value={range} onChange={setRange} />
@@ -91,7 +91,7 @@ function ExpenseRow({ expense: e }: { expense: Expense }) {
       </div>
       <span className="font-bold">{formatINR(e.amount)}</span>
       {isOwner && (
-        <button onClick={remove} disabled={pending} aria-label={t("delete")} className="rounded-lg p-2 text-zinc-400 hover:bg-rose-50 hover:text-rose-600">
+        <button onClick={remove} disabled={pending} aria-label={t("delete")} className="rounded-lg p-2 text-zinc-400 hover:bg-booked-soft hover:text-booked-ink">
           {pending ? <Spinner className="size-4" /> : <Trash2 className="size-4" />}
         </button>
       )}

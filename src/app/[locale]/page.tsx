@@ -10,7 +10,6 @@ import { Gallery } from "@/features/public/sections/gallery";
 import { Reviews } from "@/features/public/sections/reviews";
 import { Location } from "@/features/public/sections/location";
 import { Faq } from "@/features/public/sections/faq";
-import { Contact } from "@/features/public/sections/contact";
 import { FaqJsonLd } from "@/features/public/sections/json-ld";
 
 // Rates and Google reviews are refreshed in the background (rates also refresh instantly when owners save them).
@@ -37,7 +36,6 @@ export default async function HomePage({ params }: Props) {
       <Reviews />
       <Location />
       <Faq />
-      <Contact />
       <FaqJsonLd locale={locale} />
     </>
   );

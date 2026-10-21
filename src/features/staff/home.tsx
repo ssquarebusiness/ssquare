@@ -33,7 +33,7 @@ export function StaffHome() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display text-2xl font-bold text-zinc-900">{t("greeting", { name: me.display_name })}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{t("greeting", { name: me.display_name })}</h1>
         <p className="text-zinc-500">{formatDate(today, locale, { weekday: "long", day: "numeric", month: "long" })}</p>
       </div>
 
@@ -77,22 +77,22 @@ function OwnerCards({ today }: { today: string }) {
 
   return (
     <div className="space-y-3">
-      <Card className="bg-gradient-to-br from-brand-800 to-brand-950 text-white">
-        <CardTitle className="text-brand-200">{t("collectedToday")}</CardTitle>
-        <p className="mt-1 font-display text-4xl font-bold">{isLoading ? <Spinner /> : formatINR(split.total)}</p>
+      <Card>
+        <CardTitle>{t("collectedToday")}</CardTitle>
+        <p className="mt-1 text-4xl font-extrabold tracking-tight text-ink">{isLoading ? <Spinner /> : formatINR(split.total)}</p>
         <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-white/10 p-3">
-            <p className="flex items-center gap-1.5 text-sm text-brand-200"><Smartphone className="size-4" /> {t("upi")}</p>
+          <div className="rounded-xl bg-soft p-3">
+            <p className="flex items-center gap-1.5 text-sm text-zinc-500"><Smartphone className="size-4" /> {t("upi")}</p>
             <p className="text-xl font-bold">{formatINR(split.upi)}</p>
           </div>
-          <div className="rounded-xl bg-white/10 p-3">
-            <p className="flex items-center gap-1.5 text-sm text-brand-200"><Wallet className="size-4" /> {t("cash")}</p>
+          <div className="rounded-xl bg-soft p-3">
+            <p className="flex items-center gap-1.5 text-sm text-zinc-500"><Wallet className="size-4" /> {t("cash")}</p>
             <p className="text-xl font-bold">{formatINR(split.cash)}</p>
           </div>
         </div>
         {cashRows.length > 0 && (
-          <div className="mt-3 rounded-xl bg-white/5 p-3">
-            <p className="mb-1.5 text-xs font-semibold tracking-wide text-brand-200 uppercase">{t("cashWith")}</p>
+          <div className="mt-3 rounded-xl border border-line p-3">
+            <p className="mb-1.5 text-xs font-semibold tracking-wide text-zinc-500 uppercase">{t("cashWith")}</p>
             <ul className="space-y-1">
               {cashRows.map(([id, amount]) => (
                 <li key={id} className="flex justify-between text-[15px]">
@@ -107,7 +107,7 @@ function OwnerCards({ today }: { today: string }) {
       <div className="grid grid-cols-2 gap-3">
         <Card>
           <CardTitle className="flex items-center gap-1.5"><IndianRupee className="size-4" /> {t("pendingToday")}</CardTitle>
-          <p className="mt-1 text-2xl font-bold text-rose-600">{formatINR(pending)}</p>
+          <p className="mt-1 text-2xl font-bold text-booked-ink">{formatINR(pending)}</p>
         </Card>
         <Card>
           <CardTitle className="flex items-center gap-1.5"><Receipt className="size-4" /> {t("expensesToday")}</CardTitle>
@@ -122,16 +122,16 @@ function MyCollectionCard({ today }: { today: string }) {
   const t = useTranslations("staff.home");
   const { data, isLoading } = useMyCollection(today);
   return (
-    <Card className="bg-gradient-to-br from-brand-800 to-brand-950 text-white">
-      <CardTitle className="text-brand-200">{t("myCollection")}</CardTitle>
+    <Card>
+      <CardTitle>{t("myCollection")}</CardTitle>
       {isLoading ? <Spinner className="mt-2" /> : (
         <div className="mt-3 grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-white/10 p-3">
-            <p className="flex items-center gap-1.5 text-sm text-brand-200"><Smartphone className="size-4" /> {t("upi")}</p>
+          <div className="rounded-xl bg-soft p-3">
+            <p className="flex items-center gap-1.5 text-sm text-zinc-500"><Smartphone className="size-4" /> {t("upi")}</p>
             <p className="text-2xl font-bold">{formatINR(data?.upi)}</p>
           </div>
-          <div className="rounded-xl bg-white/10 p-3">
-            <p className="flex items-center gap-1.5 text-sm text-brand-200"><Wallet className="size-4" /> {t("cash")}</p>
+          <div className="rounded-xl bg-soft p-3">
+            <p className="flex items-center gap-1.5 text-sm text-zinc-500"><Wallet className="size-4" /> {t("cash")}</p>
             <p className="text-2xl font-bold">{formatINR(data?.cash)}</p>
           </div>
         </div>

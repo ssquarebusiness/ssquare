@@ -15,7 +15,7 @@ export function Logo({ className, priority }: { className?: string; priority?: b
       height={512}
       priority={priority}
       sizes="48px"
-      className={cn("h-9 w-9 rounded-lg", className)}
+      className={cn("h-9 w-9 rounded-[10px]", className)}
     />
   );
 }
@@ -38,7 +38,7 @@ export function Wordmark({ className, dark }: { className?: string; dark?: boole
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
       <Logo priority />
-      <span className={cn("font-display text-xl font-bold tracking-tight", dark ? "text-white" : "text-brand-900")}>
+      <span className={cn("text-[19px] font-extrabold tracking-tight", dark ? "text-white" : "text-ink")}>
         SSquare
       </span>
     </span>

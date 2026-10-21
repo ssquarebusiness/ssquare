@@ -37,7 +37,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-2xl flex-col bg-zinc-50">
-      <header className="safe-top sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur">
+      <header className="safe-top sticky top-0 z-30 border-b border-line bg-canvas/90 backdrop-blur">
         <div className="flex h-14 items-center justify-between px-4">
           <Link href="/staff" aria-label="SSquare home"><Wordmark /></Link>
           <div className="flex items-center gap-2">
@@ -45,7 +45,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link href="/staff/notifications" aria-label={t("notifications")} className="relative rounded-full p-2 text-zinc-700 hover:bg-zinc-100">
               <Bell className="size-6" />
               {unread > 0 && (
-                <span className="absolute top-1 right-1 flex min-w-4 items-center justify-center rounded-full bg-rose-600 px-1 text-[10px] font-bold text-white">
+                <span className="absolute top-1 right-1 flex min-w-4 items-center justify-center rounded-full bg-booked-ink px-1 text-[10px] font-bold text-white">
                   {unread > 9 ? "9+" : unread}
                 </span>
               )}
@@ -72,10 +72,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={cn("flex flex-col items-center gap-0.5 py-1 text-xs font-medium",
-                    active ? "text-brand-700" : "text-zinc-500")}
+                    active ? "text-ink" : "text-zinc-400")}
                 >
                   {item.fab ? (
-                    <span className="-mt-6 flex size-14 items-center justify-center rounded-full bg-brand-700 text-white shadow-lg ring-4 ring-white">
+                    <span className="-mt-6 flex size-14 items-center justify-center rounded-full bg-ink text-white shadow-lg ring-4 ring-white">
                       <Icon className="size-7" />
                     </span>
                   ) : (

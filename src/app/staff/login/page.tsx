@@ -11,21 +11,21 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const t = await getTranslations("staff.login");
   const { reason } = await searchParams;
   return (
-    <main className="safe-top flex min-h-dvh flex-col bg-gradient-to-b from-brand-900 to-brand-950 px-5 text-white">
+    <main className="safe-top flex min-h-dvh flex-col bg-canvas px-5 text-ink">
       <div className="flex justify-end pt-4">
-        <LanguageSwitcher dark />
+        <LanguageSwitcher />
       </div>
       <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-8 py-10">
         <div className="text-center">
-          <FullLogo priority sizes="176px" className="mx-auto w-44 ring-1 ring-white/10" />
-          <h1 className="mt-4 font-display text-3xl font-bold">{t("title")}</h1>
-          <p className="mt-1 text-brand-200">{t("subtitle")}</p>
+          <div className="mx-auto w-40 rounded-[26px] bg-white p-1.5 shadow-card"><FullLogo priority sizes="160px" className="w-full rounded-[20px]" /></div>
+          <h1 className="mt-5 text-3xl font-extrabold tracking-tight">{t("title")}</h1>
+          <p className="mt-1 text-zinc-500">{t("subtitle")}</p>
         </div>
         {reason === "inactive" && (
-          <p role="alert" className="rounded-2xl bg-rose-50 px-4 py-3 text-center text-sm text-rose-800">{t("errors.inactive")}</p>
+          <p role="alert" className="rounded-2xl bg-booked-soft px-4 py-3 text-center text-sm text-booked-ink">{t("errors.inactive")}</p>
         )}
         <LoginForm />
-        <InstallPrompt variant="dark" />
+        <InstallPrompt />
       </div>
     </main>
   );

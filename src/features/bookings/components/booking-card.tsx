@@ -28,10 +28,10 @@ export function BookingCard({ booking, onOpen, showDate }: { booking: BookingSum
       onClick={onOpen}
       className={cn(
         "flex w-full items-center gap-3 rounded-2xl border bg-white p-4 text-left shadow-sm transition active:scale-[0.99]",
-        booking.status === "cancelled" ? "border-zinc-200 opacity-60" : "border-zinc-200 hover:border-brand-300",
+        booking.status === "cancelled" ? "border-zinc-200 opacity-60" : "border-zinc-200 hover:border-zinc-300",
       )}
     >
-      <div className={cn("w-1.5 self-stretch rounded-full", booking.court_slug === "turf" ? "bg-brand-600" : "bg-ball-500")} />
+      <div className={cn("w-1.5 self-stretch rounded-full", booking.court_slug === "turf" ? "bg-brand-500" : "bg-gold")} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <p className="truncate text-base font-bold text-zinc-900">{customer.name(booking.customer_name)}</p>
@@ -48,7 +48,7 @@ export function BookingCard({ booking, onOpen, showDate }: { booking: BookingSum
         {due ? (
           <>
             <p className="text-xs text-zinc-500">{t("toCollect")}</p>
-            <p className="text-lg font-bold text-rose-600">{formatINR(booking.remaining_amount)}</p>
+            <p className="text-lg font-bold text-booked-ink">{formatINR(booking.remaining_amount)}</p>
           </>
         ) : (
           <p className="text-sm font-semibold text-zinc-500">{formatINR(booking.total_amount + booking.extra_amount)}</p>

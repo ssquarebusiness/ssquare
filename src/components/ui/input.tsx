@@ -2,7 +2,7 @@ import { forwardRef, type InputHTMLAttributes, type SelectHTMLAttributes, type T
 import { cn } from "@/lib/utils";
 
 const base =
-  "w-full rounded-xl border border-zinc-300 bg-white px-3.5 text-base text-zinc-900 placeholder:text-zinc-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200 disabled:bg-zinc-100 aria-[invalid=true]:border-rose-400";
+  "w-full rounded-xl border border-line bg-white px-3.5 text-base text-ink placeholder:text-zinc-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 disabled:bg-soft aria-[invalid=true]:border-booked-ink";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(function Input(
   { className, ...rest },
@@ -53,7 +53,7 @@ export function Field({
       </label>
       {children}
       {error ? (
-        <p role="alert" className="text-sm text-rose-600">{error}</p>
+        <p role="alert" className="text-sm text-booked-ink">{error}</p>
       ) : hint ? (
         <p className="text-sm text-zinc-500">{hint}</p>
       ) : null}

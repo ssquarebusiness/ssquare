@@ -11,7 +11,7 @@ export default async function SettingsPage() {
   const t = await getTranslations("staff.settings");
   return (
     <div className="space-y-8">
-      <h1 className="font-display text-2xl font-bold">{t("title")}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{t("title")}</h1>
       <StaffSettings />
       <RatesSettings />
     </div>

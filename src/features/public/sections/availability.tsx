@@ -10,10 +10,8 @@ export async function AvailabilitySection({ court, headingLevel = "h2" }: { cour
   const locale = (await getLocale()) as Locale;
   const names = await getCourtNames(locale);
   return (
-    <Section id="availability" headingAs={headingLevel} title={t("title")} subtitle={t("subtitle")} tone="soft">
-      <div className="mx-auto max-w-2xl">
-        <AvailabilityWidget courtNames={names} fixedCourt={court} />
-      </div>
+    <Section id="availability" tone="soft" split headingAs={headingLevel} kicker={t("kicker")} title={t("title")} subtitle={t("subtitle")}>
+      <AvailabilityWidget courtNames={names} fixedCourt={court} />
     </Section>
   );
 }

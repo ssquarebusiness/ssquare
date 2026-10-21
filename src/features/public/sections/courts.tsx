@@ -1,75 +1,69 @@
-import { getLocale, getTranslations } from "next-intl/server";
-import { Car, Check, Cctv, Clock, Droplets, Lightbulb, Package, Armchair, Bath } from "lucide-react";
-import { COURTS } from "@/config/business";
+import { getTranslations } from "next-intl/server";
+import { ArrowRight, Check } from "lucide-react";
+import { COURT_SPORTS, type CourtSlug, type Sport } from "@/config/business";
 import { siteConfig } from "@/config/site";
 import { Link } from "@/i18n/navigation";
-import type { Locale } from "@/i18n/routing";
-import { buttonClass } from "@/components/ui/button";
 import { Section } from "@/components/public/section";
 import { formatINR } from "@/lib/money";
-import { getCourtNames, getPublicData } from "@/lib/public-data";
+import { getPublicData } from "@/lib/public-data";
+import { SportIcon } from "./sport-icon";
 
-const AMENITY_ICONS = { lights: Lightbulb, parking: Car, water: Droplets, washroom: Bath, seating: Armchair, equipment: Package, cctv: Cctv, open24: Clock } as const;
-const LANDING = { turf: "/cricket-football-turf-nadiad", pickleball: "/pickleball-court-nadiad" } as const;
+const COURT_OF: Record<Sport, CourtSlug> = { cricket: "turf", football: "turf", pickleball: "pickleball" };
 
-export async function Courts() {
+/** Pricing: one card per sport with weekday / weekend hourly rates, then facilities. */
+export async function Courts({ only }: { only?: CourtSlug }) {
   const t = await getTranslations("public");
   const tSports = await getTranslations("common.sports");
-  const locale = (await getLocale()) as Locale;
   const { rates } = await getPublicData();
-  const names = await getCourtNames(locale);
+  const sports = (Object.keys(COURT_OF) as Sport[]).filter((s) => !only || COURT_SPORTS[only].includes(s));
 
   return (
-    <Section id="courts" title={t("courts.title")} subtitle={t("courts.subtitle")} tone="soft">
-      <div className="grid gap-5 md:grid-cols-2">
-        {COURTS.map((court) => {
-          const rows = rates.filter((r) => r.court_slug === court);
+    <Section id="courts" kicker={t("courts.kicker")} title={t("courts.title")} subtitle={t("courts.subtitle")}>
+      <div className="grid gap-4 md:grid-cols-3">
+        {sports.map((sport) => {
+          const r = rates.find((x) => x.sport === sport);
           return (
-            <article key={court} className="flex flex-col rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-              <h3 className="font-display text-2xl font-bold text-brand-950">{names[court]}</h3>
-              <p className="mt-2 text-zinc-600">{t(`courts.${court}.text`)}</p>
-              {rows.length === 0 ? (
-                <p className="mt-5 text-zinc-500">{t("courts.noRates")}</p>
-              ) : (
-                <table className="mt-5 w-full overflow-hidden rounded-2xl bg-brand-50 text-left">
-                  <thead>
-                    <tr className="text-sm text-zinc-500">
-                      <th scope="col" className="px-4 pt-3 pb-1 font-medium">{t("courts.perHourLabel")}</th>
-                      <th scope="col" className="px-2 pt-3 pb-1 text-right font-medium">{t("courts.dayTypes.weekday")}</th>
-                      <th scope="col" className="px-4 pt-3 pb-1 text-right font-medium">{t("courts.dayTypes.weekend")}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((r) => (
-                      <tr key={r.sport} className="border-t border-brand-100">
-                        <th scope="row" className="px-4 py-3 font-semibold text-brand-950">{tSports(r.sport)}</th>
-                        <td className="px-2 py-3 text-right text-lg font-bold text-brand-800">{formatINR(r.weekday_price)}</td>
-                        <td className="px-4 py-3 text-right text-lg font-bold text-brand-800">{formatINR(r.weekend_price)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-              <div className="mt-6 flex flex-wrap gap-2">
-                <Link href={{ pathname: "/availability", query: { court } }} className={buttonClass("primary", "md")}>{t("courts.seeSlots")}</Link>
-                <Link href={LANDING[court]} className={buttonClass("outline", "md")}>{t("courts.learnMore")}</Link>
+            <article key={sport} className="flex flex-col rounded-[20px] border border-line bg-white p-5 shadow-card md:p-6">
+              <span className="grid size-11 place-items-center rounded-xl bg-brand-50 text-brand-700"><SportIcon sport={sport} /></span>
+              <h3 className="mt-3.5 text-[19px] font-bold text-ink">
+                {tSports(sport)}
+                {sport === "pickleball" && (
+                  <span className="ml-2 rounded-full bg-gold-50 px-2 py-0.5 align-[2px] text-[11.5px] font-bold text-gold-800">{t("courts.onlyBadge")}</span>
+                )}
+              </h3>
+              <p className="mt-1 text-[14.5px] text-zinc-500">{t(`courts.sportText.${sport}`)}</p>
+              <div className="mt-4 flex-1 space-y-2.5">
+                {r ? (
+                  (["weekday", "weekend"] as const).map((k) => (
+                    <div key={k} className="flex items-baseline justify-between border-t border-dashed border-line pt-2.5">
+                      <span className="text-sm text-ink-2">{t(`courts.dayTypesLong.${k}`)}</span>
+                      <b className="text-[22px] tracking-tight text-ink">
+                        {formatINR(k === "weekday" ? r.weekday_price : r.weekend_price)}
+                        <small className="ml-1 text-[13px] font-medium text-zinc-500">{t("courts.perHour")}</small>
+                      </b>
+                    </div>
+                  ))
+                ) : (
+                  <p className="border-t border-dashed border-line pt-2.5 text-sm text-zinc-500">{t("courts.noRates")}</p>
+                )}
               </div>
+              <Link href={{ pathname: "/availability", query: { court: COURT_OF[sport] } }}
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 hover:text-ink">
+                {t("courts.seeSlots")} <ArrowRight className="size-4" />
+              </Link>
             </article>
           );
         })}
       </div>
-      <p className="mt-4 text-sm text-zinc-500">{t("courts.ratesNote")}</p>
+      <p className="mt-4 text-[13px] text-zinc-500">{t("courts.ratesNote")}</p>
 
-      <h3 className="mt-12 mb-4 text-xl font-bold text-brand-950">{t("amenities.title")}</h3>
-      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {siteConfig.amenities.map((a) => {
-          const Icon = AMENITY_ICONS[a as keyof typeof AMENITY_ICONS] ?? Check;
-          return (
-            <li key={a} className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-zinc-200">
-              <Icon className="size-5 shrink-0 text-brand-700" /> <span className="font-medium">{t(`amenities.${a}`)}</span>
-            </li>
-          );
-        })}
+      <h3 className="mt-10 mb-3 text-sm font-bold tracking-[0.1em] text-brand-700 uppercase">{t("amenities.title")}</h3>
+      <ul className="flex flex-wrap gap-2">
+        {siteConfig.amenities.map((a) => (
+          <li key={a} className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-sm font-semibold text-ink-2">
+            <Check className="size-4 text-brand-600" /> {t(`amenities.${a}`)}
+          </li>
+        ))}
       </ul>
     </Section>
   );

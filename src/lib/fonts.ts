@@ -1,6 +1,12 @@
-import { Noto_Sans, Noto_Sans_Gujarati, Noto_Sans_Devanagari, Outfit } from "next/font/google";
+import { Noto_Sans_Devanagari, Noto_Sans_Gujarati, Plus_Jakarta_Sans } from "next/font/google";
 
-export const notoSans = Noto_Sans({ subsets: ["latin"], variable: "--font-noto", display: "swap" });
+/** Clean Sage theme type: Plus Jakarta Sans (Latin), Noto for Gujarati / Hindi script. */
+export const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
 export const notoGujarati = Noto_Sans_Gujarati({
   subsets: ["gujarati"],
   weight: ["400", "500", "600", "700"],
@@ -15,6 +21,5 @@ export const notoDevanagari = Noto_Sans_Devanagari({
   display: "swap",
   preload: false,
 });
-export const outfit = Outfit({ subsets: ["latin"], variable: "--font-display", display: "swap" });
 
-export const fontVariables = [notoSans, notoGujarati, notoDevanagari, outfit].map((f) => f.variable).join(" ");
+export const fontVariables = [jakarta, notoGujarati, notoDevanagari].map((f) => f.variable).join(" ");

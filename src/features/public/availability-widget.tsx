@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { CalendarDays, ChevronDown, Moon, Phone, Sun, Sunrise, Sunset } from "lucide-react";
+import { CalendarDays, ChevronDown, Phone } from "lucide-react";
 import { businessConfig, COURTS, type CourtSlug } from "@/config/business";
 import { enquiryMessage } from "@/config/messages";
 import { siteConfig } from "@/config/site";
@@ -15,8 +15,6 @@ import { bookedMinutesOfDay, buildHourRows, dayPartOf, freeUntil, groupByDayPart
 import { addDays, formatDate, formatHour, formatMinutes, istDateStr, istMinutesOfDay, type DateStr } from "@/lib/time";
 import { cn, telHref, whatsappHref } from "@/lib/utils";
 import { useAvailability } from "./use-availability";
-
-const PART_ICONS = { night: Moon, morning: Sunrise, afternoon: Sun, evening: Sunset } as const;
 
 /**
  * Public availability: court tabs → date strip → 24 hourly rows in 4 day-parts.
@@ -81,27 +79,27 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
     : "";
 
   return (
-    <div className="space-y-4">
+    <div className="rounded-[22px] border border-line bg-white p-4 shadow-card sm:p-5">
       {!fixedCourt && (
-        <div role="tablist" aria-label={t("title")} className="grid grid-cols-2 gap-1 rounded-2xl bg-zinc-100 p-1">
+        <div role="tablist" aria-label={t("title")} className="grid grid-cols-2 gap-1 rounded-xl bg-soft p-1">
           {COURTS.map((c) => (
             <button key={c} role="tab" aria-selected={court === c} onClick={() => selectCourt(c)}
-              className={cn("rounded-xl px-3 py-3 text-[15px] font-semibold transition",
-                court === c ? "bg-white text-brand-900 shadow" : "text-zinc-600")}>
+              className={cn("rounded-[9px] px-2 py-2.5 text-[14.5px] font-bold transition",
+                court === c ? "bg-white text-ink shadow-sm" : "text-zinc-500")}>
               {courtNames[c]}
             </button>
           ))}
         </div>
       )}
 
-      <div className="no-scrollbar relative -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+      <div className="no-scrollbar relative -mx-4 flex gap-2 overflow-x-auto px-4 pt-4 pb-2.5 sm:-mx-5 sm:px-5">
         {days.map((d) => (
           <button key={d} onClick={() => setDate(d)} aria-pressed={date === d}
-            className={cn("flex min-w-[4.5rem] shrink-0 flex-col items-center rounded-2xl border px-3 py-2 transition",
-              date === d ? "border-brand-700 bg-brand-700 text-white" : "border-zinc-200 bg-white text-zinc-700")}>
-            <span className="text-xs font-medium">{dayLabel(d)}</span>
-            <span className="text-lg font-bold">{formatDate(d, locale, { day: "numeric" })}</span>
-            <span className="text-[11px] opacity-80">{formatDate(d, locale, { month: "short" })}</span>
+            className={cn("flex min-w-16 shrink-0 flex-col items-center rounded-xl border px-2 py-2 transition",
+              date === d ? "border-brand-500 bg-brand-50 ring-1 ring-brand-500" : "border-line bg-white")}>
+            <span className="text-[11px] font-semibold text-zinc-500">{dayLabel(d)}</span>
+            <span className="text-lg leading-tight font-bold text-ink">{formatDate(d, locale, { day: "numeric" })}</span>
+            <span className="text-[11px] font-semibold text-zinc-500">{formatDate(d, locale, { month: "short" })}</span>
           </button>
         ))}
         <DatePickerButton
@@ -111,15 +109,13 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
           onChange={setDate}
           label={t("pickDate")}
           className={cn(
-            "flex h-full min-w-[4.5rem] shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl border px-3 py-2",
-            days.includes(date)
-              ? "border-dashed border-zinc-300 bg-white text-zinc-600"
-              : "border-brand-700 bg-brand-700 text-white",
+            "flex h-full min-w-16 shrink-0 flex-col items-center justify-center gap-0.5 rounded-xl border px-2.5 py-2",
+            days.includes(date) ? "border-line bg-white text-zinc-500" : "border-brand-500 bg-brand-50 text-ink ring-1 ring-brand-500",
           )}
         >
-          <CalendarDays className="size-5" />
+          <CalendarDays className="size-[18px]" />
           {days.includes(date) ? (
-            <span className="text-[11px] font-medium">{t("pickDate")}</span>
+            <span className="text-[11px] font-semibold">{t("pickDate")}</span>
           ) : (
             <span className="text-xs font-bold">{formatDate(date, locale, { day: "numeric", month: "short" })}</span>
           )}
@@ -127,10 +123,10 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
       </div>
 
       {!days.includes(date) && (
-        <p className="text-center font-semibold text-brand-900">{formatDate(date, locale, { weekday: "long", day: "numeric", month: "long" })}</p>
+        <p className="pb-1 font-bold text-ink">{formatDate(date, locale, { weekday: "long", day: "numeric", month: "long" })}</p>
       )}
 
-      <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-600">
+      <div className="flex flex-wrap items-center gap-4 pt-1 pb-3 text-[13px] text-zinc-500">
         <Legend className="bg-free" label={t("legendFree")} />
         <Legend className="bg-booked" label={t("legendBooked")} />
         <Legend className="bg-past" label={t("legendPast")} />
@@ -138,44 +134,42 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
       </div>
 
       {error && !data ? (
-        <div className="rounded-2xl bg-rose-50 p-4 text-center text-rose-800">
+        <div className="rounded-xl bg-booked-soft p-4 text-center text-booked-ink">
           <p>{t("error")}</p>
           <button onClick={retry} className="mt-2 font-semibold underline">{t("retry")}</button>
         </div>
       ) : !data ? (
         <div className="flex items-center justify-center gap-2 py-10 text-zinc-500"><Spinner /> {t("loading")}</div>
       ) : (
-        <div className="space-y-2.5">
+        <div>
           {parts.map((part) => {
-            const Icon = PART_ICONS[part.key as keyof typeof PART_ICONS];
             const isOpen = open.has(part.key);
             const freeHours = part.rows.reduce((a, r) => a + r.free.reduce((x, f) => x + f.to - f.from, 0), 0) / 60;
             return (
-              <section key={part.key} className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+              <section key={part.key} className="border-t border-line">
                 <button
                   onClick={() => setOpen((s) => { const n = new Set(s); if (n.has(part.key)) n.delete(part.key); else n.add(part.key); return n; })}
                   aria-expanded={isOpen}
-                  className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
+                  className="flex w-full items-center justify-between gap-3 py-3.5 text-left"
                 >
-                  <Icon className="size-5 text-brand-700" />
-                  <span className="flex-1">
-                    <span className="block font-semibold text-zinc-900">{t(`parts.${part.key}`)}</span>
-                    <span className="block text-xs text-zinc-500">
-                      {formatHour(part.from, locale)} – {formatHour(part.to % 24, locale)} ·{" "}
-                      {part.rows.every((r) => r.status === "past") ? t("status.past") : t("freeHours", { count: Math.floor(freeHours) })}
-                    </span>
+                  <span className="font-bold text-ink">{t(`parts.${part.key}`)}</span>
+                  <span className="flex items-center gap-2 text-[13px] font-semibold text-zinc-500">
+                    {formatHour(part.from, locale)} – {formatHour(part.to % 24, locale)} ·{" "}
+                    {part.rows.every((r) => r.status === "past") ? t("status.past") : t("freeHours", { count: Math.floor(freeHours) })}
+                    <ChevronDown className={cn("size-4 transition", isOpen && "rotate-180")} />
                   </span>
-                  <ChevronDown className={cn("size-5 text-zinc-400 transition", isOpen && "rotate-180")} />
                 </button>
                 {isOpen && (
-                  <ul className="divide-y divide-zinc-100 border-t border-zinc-100">
+                  <ul className="pb-2">
                     {part.rows.map((row) => <HourRowView key={row.hour} row={row} onChoose={() => choose(row)} />)}
                   </ul>
                 )}
               </section>
             );
           })}
-          <p className="text-center text-xs text-zinc-400">{t("updated")}</p>
+          <p className="mt-2 flex items-center gap-2.5 rounded-xl bg-brand-50 px-3.5 py-3 text-sm font-semibold text-brand-700">
+            <WhatsAppIcon className="size-4 shrink-0" /> {t("hint")}
+          </p>
         </div>
       )}
 
@@ -183,15 +177,15 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
         {pick && (
           <div className="space-y-4">
             <div className="rounded-2xl bg-brand-50 p-4">
-              <p className="font-bold text-brand-900">{courtNames[court]}</p>
-              <p className="text-zinc-700">{formatDate(date, locale, { weekday: "long", day: "numeric", month: "long" })}</p>
-              <p className="mt-1 font-semibold text-free">
+              <p className="font-bold text-ink">{courtNames[court]}</p>
+              <p className="text-ink-2">{formatDate(date, locale, { weekday: "long", day: "numeric", month: "long" })}</p>
+              <p className="mt-1 font-semibold text-free-ink">
                 {t("freeWindow", { from: formatMinutes(pick.minute, locale), to: formatMinutes(pick.until, locale) })}
               </p>
             </div>
             <a href={whatsappHref(message, siteConfig.contact.whatsapp)} target="_blank" rel="noopener noreferrer"
-              className={buttonClass("whatsapp", "xl", "w-full")}>
-              <WhatsAppIcon className="size-6" /> WhatsApp
+              className={buttonClass("primary", "xl", "w-full")}>
+              <WhatsAppIcon className="size-5" /> {t("bookWhatsapp")}
             </a>
             <div className="grid gap-2">
               {siteConfig.contact.phones.map((p) => (
@@ -211,7 +205,7 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
 function Legend({ className, label }: { className: string; label: string }) {
   return (
     <span className="inline-flex items-center gap-1.5">
-      <span className={cn("size-3 rounded-sm", className)} aria-hidden /> {label}
+      <span className={cn("size-2.5 rounded-[3px]", className)} aria-hidden /> {label}
     </span>
   );
 }
@@ -231,16 +225,17 @@ function HourRowView({ row, onChoose }: { row: HourRow; onChoose: () => void }) 
   return (
     <li>
       <button onClick={onChoose} disabled={!clickable}
-        className={cn("flex min-h-12 w-full items-center gap-2 px-3 py-2 text-left sm:gap-3 sm:px-4", clickable ? "active:bg-brand-50" : "cursor-default")}>
-        <span className="w-11 shrink-0 text-[13px] font-semibold text-zinc-700 sm:w-14 sm:text-sm">{formatHour(row.hour, locale)}</span>
-        <span className="relative h-7 min-w-0 flex-1 overflow-hidden rounded-lg bg-free/85" aria-hidden>
+        className={cn("grid min-h-11 w-full grid-cols-[2.75rem_1fr_5.75rem] items-center gap-2.5 rounded-lg px-1 py-1.5 text-left sm:grid-cols-[3.25rem_1fr_7.5rem] sm:gap-3",
+          clickable ? "hover:bg-soft active:bg-brand-50" : "cursor-default")}>
+        <span className="text-[13px] font-bold text-ink-2 sm:text-[13.5px]">{formatHour(row.hour, locale)}</span>
+        <span className="relative h-2.5 min-w-0 overflow-hidden rounded-full bg-free" aria-hidden>
           {row.pastMinutes > 0 && <span className="absolute inset-y-0 left-0 bg-past" style={{ width: pct(row.pastMinutes) }} />}
           {row.booked.map((b) => (
             <span key={b.from} className="absolute inset-y-0 bg-booked" style={{ left: pct(b.from), width: pct(b.to - b.from) }} />
           ))}
         </span>
-        <span className={cn("w-[5.75rem] shrink-0 text-right text-xs leading-tight font-medium sm:w-32 sm:text-sm",
-          row.status === "free" ? "text-free" : row.status === "booked" ? "text-booked" : row.status === "past" ? "text-zinc-400" : "text-amber-700")}>
+        <span className={cn("text-right text-xs leading-tight font-semibold sm:text-[13px]",
+          row.status === "free" ? "text-free-ink" : row.status === "booked" ? "text-booked-ink" : row.status === "past" ? "text-zinc-400" : "text-partial-ink")}>
           {label}
         </span>
       </button>

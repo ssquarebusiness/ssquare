@@ -262,7 +262,7 @@ export function BookingForm({
           )}
         </div>
         <DayStrip date={date} court={court} busy={busy} selection={{ start, end }} clash={clash} />
-        <p className={clash ? "text-sm font-semibold text-rose-600" : "text-sm text-zinc-600"}>
+        <p className={clash ? "text-sm font-semibold text-booked-ink" : "text-sm text-zinc-600"}>
           {clash ? t("clash") : t("selected", { from: formatMinutes(startMin, locale), to: formatMinutes((startMin + duration) % 1440, locale) })}
         </p>
       </section>

@@ -12,7 +12,7 @@ export function LoginForm() {
   const [show, setShow] = useState(false);
 
   return (
-    <form action={action} className="space-y-4 rounded-3xl bg-white p-5 text-zinc-900 shadow-xl">
+    <form action={action} className="space-y-4 rounded-3xl border border-line bg-white p-5 text-ink shadow-card">
       <div className="space-y-1.5">
         <label htmlFor="username" className="text-sm font-medium text-zinc-700">{t("username")}</label>
         <Input id="username" name="username" autoComplete="username" autoCapitalize="none" autoCorrect="off"
@@ -29,7 +29,7 @@ export function LoginForm() {
           </button>
         </div>
       </div>
-      {state?.error && <p role="alert" className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{t(`errors.${state.error}`)}</p>}
+      {state?.error && <p role="alert" className="rounded-xl bg-booked-soft px-3 py-2 text-sm text-booked-ink">{t(`errors.${state.error}`)}</p>}
       <Button type="submit" size="lg" block loading={pending}>{t("submit")}</Button>
       <p className="text-center text-xs text-zinc-500">{t("stayLoggedIn")}</p>
     </form>

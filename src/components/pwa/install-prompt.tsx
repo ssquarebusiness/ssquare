@@ -54,15 +54,15 @@ export function InstallPrompt({ variant = "light", className }: { variant?: "lig
   };
 
   return (
-    <div className={cn("rounded-2xl p-4", variant === "dark" ? "bg-white/10 text-white" : "border border-brand-200 bg-brand-50", className)}>
+    <div className={cn("rounded-2xl p-4", variant === "dark" ? "bg-white/10 text-white" : "border border-line bg-white", className)}>
       <div className="flex items-center gap-3">
-        <Smartphone className="size-8 shrink-0" aria-hidden />
+        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-700"><Smartphone className="size-5" aria-hidden /></span>
         <div className="flex-1">
           <p className="font-semibold">{t("title")}</p>
-          <p className={cn("text-sm", variant === "dark" ? "text-brand-200" : "text-zinc-600")}>{t("subtitle")}</p>
+          <p className={cn("text-sm", variant === "dark" ? "text-white/70" : "text-zinc-500")}>{t("subtitle")}</p>
         </div>
       </div>
-      <Button variant="accent" block className="mt-3" onClick={install}>
+      <Button variant="primary" block className="mt-3" onClick={install}>
         <Download className="size-5" /> {t("install")}
       </Button>
 
@@ -86,5 +86,5 @@ export function InstallPrompt({ variant = "light", className }: { variant?: "lig
 }
 
 function Step({ n }: { n: number }) {
-  return <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-700 text-sm font-bold text-white">{n}</span>;
+  return <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-ink text-sm font-bold text-white">{n}</span>;
 }

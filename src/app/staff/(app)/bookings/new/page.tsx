@@ -14,7 +14,7 @@ export default async function NewBookingPage({ searchParams }: { searchParams: P
   const initialCourt = (COURTS as readonly string[]).includes(court ?? "") ? (court as CourtSlug) : undefined;
   return (
     <div className="space-y-4">
-      <h1 className="font-display text-2xl font-bold">{t("title")}</h1>
+      <h1 className="text-2xl font-extrabold tracking-tight">{t("title")}</h1>
       <BookingForm initialDate={isDateStr(date) ? date : istDateStr()} initialCourt={initialCourt} />
     </div>
   );

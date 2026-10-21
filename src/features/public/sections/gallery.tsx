@@ -2,21 +2,27 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { siteConfig } from "@/config/site";
 import { Section } from "@/components/public/section";
+import { cn } from "@/lib/utils";
 
+/** Photo mosaic: one large photo, the rest in a grid. */
 export async function Gallery() {
   const t = await getTranslations("public.gallery");
   return (
-    <Section id="gallery" title={t("title")}>
-      <ul className="no-scrollbar relative -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-4">
-        {siteConfig.gallery.map((img) => (
-          <li key={img.src} className="w-[80%] shrink-0 snap-center md:w-auto">
-            <figure className="overflow-hidden rounded-3xl bg-zinc-100">
-              <Image src={img.src} alt={t(`alt.${img.alt}`)} width={img.width} height={img.height} loading="lazy"
-                sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 80vw"
-                className="aspect-[4/3] h-auto w-full object-cover" unoptimized={img.src.endsWith(".svg")} />
-            </figure>
+    <Section id="gallery" kicker={t("kicker")} title={t("title")}>
+      <ul className="grid grid-cols-2 gap-2.5 md:grid-cols-[2fr_1fr_1fr] md:grid-rows-2">
+        {siteConfig.gallery.map((img, i, all) => {
+          // An odd number of small photos leaves a gap on desktop — let the last one fill the row.
+          const fillLast = i === all.length - 1 && i > 0 && (all.length - 1) % 2 === 1;
+          return (
+          <li key={img.src} className={cn("relative overflow-hidden rounded-2xl bg-soft",
+            i === 0 ? "col-span-2 aspect-video md:col-span-1 md:row-span-2 md:aspect-auto" : "aspect-square",
+            fillLast && "col-span-2 aspect-video md:aspect-auto")}>
+            <Image src={img.src} alt={t(`alt.${img.alt}`)} fill loading="lazy"
+              sizes={i === 0 ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 768px) 25vw, 50vw"}
+              className="object-cover" unoptimized={img.src.endsWith(".svg")} />
           </li>
-        ))}
+          );
+        })}
       </ul>
     </Section>
   );

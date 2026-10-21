@@ -37,7 +37,7 @@ export function EditBooking({ id }: { id: string }) {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="font-display text-2xl font-bold">{t("editTitle")}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight">{t("editTitle")}</h1>
         <p className="text-sm text-zinc-500">{data.booking.code}</p>
       </div>
       <BookingForm initialDate={istDateStr(new Date(data.booking.start_at))} editing={data} />

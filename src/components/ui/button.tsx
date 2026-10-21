@@ -2,15 +2,16 @@ import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { Spinner } from "./spinner";
 
+/** Clean Sage: charcoal primary, soft sage accent, quiet outlines. */
 const variants = {
-  primary: "bg-brand-700 text-white hover:bg-brand-800 active:bg-brand-900",
-  accent: "bg-ball-400 text-brand-950 hover:bg-ball-500",
-  secondary: "bg-brand-50 text-brand-800 hover:bg-brand-100",
-  outline: "border border-zinc-300 bg-white text-zinc-800 hover:bg-zinc-50",
-  ghost: "text-zinc-700 hover:bg-zinc-100",
-  danger: "bg-rose-600 text-white hover:bg-rose-700",
-  dangerOutline: "border border-rose-300 bg-white text-rose-700 hover:bg-rose-50",
-  whatsapp: "bg-[#25D366] text-white hover:bg-[#1ebe5b]",
+  primary: "bg-ink text-white hover:bg-ink-hover",
+  accent: "bg-brand-100 text-ink hover:bg-brand-200",
+  secondary: "bg-soft text-ink hover:bg-zinc-200",
+  outline: "border border-line bg-white text-ink hover:bg-soft",
+  ghost: "text-ink-2 hover:bg-soft",
+  danger: "bg-booked-ink text-white hover:bg-[#9c4a46]",
+  dangerOutline: "border border-booked bg-white text-booked-ink hover:bg-booked-soft",
+  whatsapp: "border border-[#cde9d8] bg-[#eef8f2] text-[#1d7a46] hover:bg-[#e2f3e9]",
 } as const;
 
 const sizes = {
