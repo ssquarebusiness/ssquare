@@ -6,8 +6,8 @@
  */
 export const siteConfig = {
   name: "SSquare",
-  legalName: "SSquare Sports Arena",
-  tagline: "Turf & Pickleball, Nadiad",
+  legalName: "SSquare",
+  tagline: "Cricket, Football Turf & Pickleball, Nadiad",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
 
   owners: ["Shail Patel", "Shubh Patel"],
@@ -15,7 +15,7 @@ export const siteConfig = {
   contact: {
     // Numbers WITHOUT +91 / spaces. Used for tel: links and WhatsApp.
     phones: [
-      { name: "Shail Patel", number: "9999999991" }, // TODO
+      { name: "Shail Patel", number: "8469285158" }, // TODO
       { name: "Shubh Patel", number: "9999999992" }, // TODO
     ],
     whatsapp: "9999999991", // TODO number that receives public booking enquiries

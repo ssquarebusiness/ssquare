@@ -15,7 +15,7 @@ Stack: Next.js 15 (App Router, TypeScript) · Tailwind CSS 4 · Supabase (Postgr
 1. Create a free project at [supabase.com](https://supabase.com), region **Mumbai (ap-south-1)**.
 2. **SQL Editor** → run [`supabase/migrations/20261014000001_init.sql`](supabase/migrations/20261014000001_init.sql), then [`supabase/seed.sql`](supabase/seed.sql).
 3. **Authentication → Sign In / Providers → Email**: turn **off** "Allow new users to sign up". Only owners create accounts, from the app.
-4. **Project Settings → API**: copy the URL, the `anon` key and the `service_role` key.
+4. **Project Settings → API Keys**: copy the project URL, a **publishable key** (`sb_publishable_…`) and a **secret key** (`sb_secret_…`). Don't use the legacy `anon` / `service_role` keys: Supabase is retiring them by the end of 2026. Once the app works with the new keys, you can disable the legacy ones on the same page.
 
 ### Environment
 ```bash
@@ -25,7 +25,7 @@ Fill in `.env.local`:
 
 | Variable | Where it comes from |
 |---|---|
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API Keys (publishable `sb_publishable_…`, secret `sb_secret_…`) |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | `npm run vapid:generate` |
 | `GOOGLE_PLACES_API_KEY`, `GOOGLE_PLACE_ID` | Google Cloud → enable **Places API (New)** → create a key restricted to that API. Find the Place ID with Google's Place ID Finder. A billing account is required; daily caching keeps usage inside the free monthly quota. |
 | `NEXT_PUBLIC_SITE_URL` | Your live domain, e.g. `https://ssquarenadiad.in` |

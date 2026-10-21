@@ -1,13 +1,14 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { supabasePublishableKey, supabaseUrl } from "./env";
 
 /** Server Supabase client bound to the request's auth cookies (RLS applies). */
 export async function createClient() {
   const cookieStore = await cookies();
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabasePublishableKey,
     {
       cookies: {
         getAll: () => cookieStore.getAll(),
@@ -26,8 +27,8 @@ export async function createClient() {
 /** Anonymous client for public, cacheable reads (no cookies → pages stay static). */
 export function createPublicClient() {
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabasePublishableKey,
     { cookies: { getAll: () => [], setAll: () => {} } },
   );
 }
