@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Concept C — Scoreboard Pitch · SSquare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@600;700;800&family=Saira:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --pitch: #0d3310;
+    --pitch-2: #0a2a0c;
+    --stripe: rgba(255, 255, 255, 0.025);
+    --chalk: rgba(255, 255, 255, 0.55);
+    --tile: rgba(4, 18, 5, 0.72);
+    --tile-line: rgba(255, 255, 255, 0.1);
+    --lime: #8ce03a;
+    --green: #4caf1a;
+    --yellow: #f6cf1d;
+    --blue: #3a6fe0;
+    --text: #f4f8f0;
+    --muted: #a8bba0;
+    --led-free: #6dff7a;
+    --led-booked: #ff5a5f;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; color: var(--text); font-family: Saira, system-ui, sans-serif; line-height: 1.5; -webkit-font-smoothing: antialiased;
+    /* Mowed-turf stripes */
+    background: repeating-linear-gradient(180deg, var(--pitch) 0 120px, var(--pitch-2) 120px 240px);
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 14px; }
+  .cond { font-family: "Saira Condensed", sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
+  .led { font-family: "Share Tech Mono", monospace; }
+  .concept-tag { position: fixed; top: 10px; right: 10px; z-index: 99; background: var(--lime); color: #0b1c06; font: 700 12px Saira; padding: 6px 10px; border-radius: 999px; }
+
+  header { position: sticky; top: 0; z-index: 40; background: rgba(3, 14, 4, 0.85); backdrop-filter: blur(10px); border-bottom: 2px solid var(--chalk); }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img { width: 40px; height: 40px; border-radius: 10px; }
+  .brand b { font-family: "Saira Condensed"; font-size: 24px; letter-spacing: 0.03em; }
+  .nav-links { display: none; gap: 22px; font-family: "Saira Condensed"; font-size: 18px; text-transform: uppercase; color: var(--muted); }
+  .lang { display: none; font-size: 13px; gap: 8px; color: var(--muted); }
+  .lang .on { color: var(--lime); font-weight: 700; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: "Saira Condensed"; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; font-size: 19px; padding: 12px 20px; border-radius: 10px; border: 0; cursor: pointer; }
+  .btn-lime { background: var(--lime); color: #0b1c06; box-shadow: 0 4px 0 #4f8f1b; }
+  .btn-yellow { background: var(--yellow); color: #1d1800; box-shadow: 0 4px 0 #a7880b; }
+  .btn-wa { background: #22c35e; color: #fff; box-shadow: 0 4px 0 #15803d; }
+  .btn-sm { font-size: 16px; padding: 8px 14px; }
+  .menu-btn { background: none; color: var(--text); border: 1.5px solid var(--chalk); border-radius: 10px; width: 42px; height: 42px; font-size: 20px; }
+
+  /* Pitch-line decoration */
+  .chalk { position: absolute; pointer-events: none; border: 2px solid var(--chalk); opacity: 0.35; }
+
+  /* Bento grid */
+  .bento { display: grid; gap: 12px; padding: 16px 0 40px; }
+  .tile { position: relative; background: var(--tile); border: 1px solid var(--tile-line); border-radius: 20px; padding: 16px; overflow: hidden; backdrop-filter: blur(4px); }
+  .tile h2 { margin: 0 0 4px; font-size: 30px; line-height: 1; }
+  .tile .k { color: var(--lime); font-weight: 700; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .hero-tile { padding: 20px 16px 22px; text-align: center; background: radial-gradient(circle at 50% 30%, rgba(140, 224, 58, 0.18), transparent 60%), #030a03; }
+  .hero-tile .circle { position: absolute; left: 50%; top: 46%; width: 300px; height: 300px; transform: translate(-50%, -50%); border: 2px solid var(--chalk); border-radius: 50%; opacity: 0.18; }
+  .hero-tile img { position: relative; width: min(58vw, 230px); margin: 0 auto 10px; }
+  .hero-tile h1 { position: relative; margin: 6px 0 8px; font-size: clamp(34px, 9vw, 56px); line-height: 0.95; }
+  .hero-tile h1 span { color: var(--yellow); }
+  .hero-tile p { position: relative; color: var(--muted); margin: 0 auto 18px; max-width: 460px; }
+  .hero-tile .cta { position: relative; display: grid; gap: 12px; max-width: 420px; margin: 0 auto; }
+
+  .mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .mini { text-align: center; padding: 14px 10px; }
+  .mini b { display: block; font-size: 34px; line-height: 1; color: var(--lime); }
+  .mini span { color: var(--muted); font-size: 13px; }
+
+  /* Scoreboard availability */
+  .board { background: #020602; border: 3px solid #1d2a1c; border-radius: 20px; padding: 14px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 20px 40px -20px #000; }
+  .board-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .board-top .live { display: inline-flex; align-items: center; gap: 6px; color: var(--led-booked); font-size: 13px; }
+  .board-top .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--led-booked); box-shadow: 0 0 8px var(--led-booked); animation: blink 1.4s infinite; }
+  @keyframes blink { 50% { opacity: 0.25; } }
+  .switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .switch button { background: #0c160b; color: var(--muted); border: 1px solid #1d2a1c; border-radius: 10px; padding: 10px; font-family: "Saira Condensed"; font-weight: 800; font-size: 17px; text-transform: uppercase; cursor: pointer; }
+  .switch button.on { color: #0b1c06; background: var(--lime); border-color: var(--lime); }
+  .days { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 12px; }
+  .days button { flex: 0 0 auto; background: #0c160b; border: 1px solid #1d2a1c; color: var(--text); border-radius: 10px; padding: 6px 10px; font-family: "Share Tech Mono"; font-size: 14px; cursor: pointer; }
+  .days button.on { border-color: var(--yellow); color: var(--yellow); }
+  .lines { display: grid; gap: 6px; }
+  .line { display: grid; grid-template-columns: 54px 1fr 108px; gap: 10px; align-items: center; font-family: "Share Tech Mono"; }
+  .line .t { color: #cfe0c7; font-size: 15px; }
+  .dots { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
+  .dots i { height: 16px; border-radius: 3px; background: var(--led-free); box-shadow: 0 0 6px rgba(109, 255, 122, 0.55); }
+  .dots i.x { background: var(--led-booked); box-shadow: 0 0 6px rgba(255, 90, 95, 0.55); }
+  .dots i.o { background: #1c241b; box-shadow: none; }
+  .line .s { font-size: 13px; text-align: right; }
+  .s.f { color: var(--led-free); } .s.b { color: var(--led-booked); } .s.p { color: var(--yellow); } .s.o { color: #5c6a58; }
+  .board .note { color: var(--muted); font-size: 12.5px; margin-top: 10px; font-family: Saira; }
+
+  /* Price scoreboard */
+  .price-tile { display: grid; gap: 10px; }
+  .p-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; background: #030a03; border: 1px solid var(--tile-line); border-radius: 14px; padding: 10px 12px; }
+  .p-row .n { font-family: "Saira Condensed"; font-size: 20px; font-weight: 800; text-transform: uppercase; }
+  .p-row .v { text-align: center; min-width: 74px; }
+  .p-row .v small { display: block; font-size: 10.5px; color: var(--muted); letter-spacing: 0.08em; }
+  .p-row .v b { font-family: "Share Tech Mono"; font-size: 20px; color: var(--yellow); }
+
+  .pickle-tile { background: linear-gradient(150deg, rgba(58, 111, 224, 0.9), rgba(20, 50, 130, 0.95)); }
+  .pickle-tile .court { position: absolute; right: -30px; bottom: -30px; width: 170px; height: 120px; border: 2px solid rgba(255, 255, 255, 0.5); transform: rotate(-12deg); }
+  .pickle-tile .court::after { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 2px solid rgba(255, 255, 255, 0.5); }
+
+  .why-list { display: grid; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+  .why-list li { display: flex; gap: 10px; align-items: flex-start; }
+  .why-list li::before { content: "✓"; color: #0b1c06; background: var(--lime); border-radius: 50%; width: 22px; height: 22px; flex: 0 0 22px; display: grid; place-items: center; font-weight: 800; font-size: 13px; margin-top: 2px; }
+
+  .photos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .photos div { aspect-ratio: 1; border-radius: 12px; background-size: cover; background-position: center; }
+
+  .review-tile .q { font-size: 17px; margin: 10px 0; }
+  .review-tile .stars { color: var(--yellow); letter-spacing: 2px; }
+  .map { height: 200px; border-radius: 14px; margin-top: 10px; background: linear-gradient(135deg, #133b13, #071a07); border: 1px dashed var(--chalk); display: grid; place-items: center; color: var(--muted); }
+  .faq details { border-top: 1px solid var(--tile-line); padding: 10px 0; }
+  .faq summary { cursor: pointer; font-weight: 600; }
+  .faq p { color: var(--muted); margin: 6px 0 0; }
+
+  footer { border-top: 2px solid var(--chalk); background: rgba(3, 14, 4, 0.9); padding: 28px 0 110px; color: var(--muted); font-size: 14px; }
+  .sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 8px; padding: 10px 12px calc(12px + env(safe-area-inset-bottom)); background: rgba(3, 14, 4, 0.95); border-top: 2px solid var(--chalk); }
+  .sticky-cta .btn { font-size: 16px; padding: 10px 6px; }
+
+  @media (min-width: 768px) {
+    .wrap { padding: 0 24px; }
+    .nav-links, .lang { display: flex; }
+    .menu-btn { display: none; }
+    .bento { grid-template-columns: repeat(6, 1fr); grid-auto-flow: dense; gap: 14px; padding-top: 24px; }
+    .hero-tile { grid-column: span 4; grid-row: span 2; text-align: left; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 10px; padding: 28px; }
+    .hero-tile img { order: 2; width: 100%; }
+    .hero-tile p { margin-left: 0; }
+    .hero-tile .cta { margin: 0; grid-template-columns: 1fr 1fr; }
+    .mini-row { grid-column: span 2; grid-template-columns: 1fr; }
+    .board-tile { grid-column: span 4; grid-row: span 2; }
+    .price-wrap { grid-column: span 2; }
+    .pickle-tile { grid-column: span 2; }
+    .why-tile { grid-column: span 3; }
+    .photo-tile { grid-column: span 3; }
+    .photos { grid-template-columns: repeat(4, 1fr); }
+    .review-tile { grid-column: span 2; }
+    .visit-tile { grid-column: span 4; }
+    .sticky-cta { display: none; }
+    footer { padding-bottom: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="concept-tag">Concept C · Scoreboard Pitch</div>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#"><img src="../public/images/logo-emblem.webp" alt="" /><b>SSQUARE</b></a>
+    <nav class="nav-links"><a href="#slots">Slots</a><a href="#prices">Prices</a><a href="#photos">Photos</a><a href="#visit">Visit</a></nav>
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="lang"><span class="on">EN</span><span>ગુજ</span><span>हिं</span></div>
+      <a class="btn btn-lime btn-sm" href="#slots">Book</a>
+      <button class="menu-btn" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="bento">
+    <section class="tile hero-tile">
+      <div class="circle"></div>
+      <img src="../public/images/logo.webp" alt="SSquare — Cricket Box, Pickleball, Football Turf" />
+      <div>
+        <div class="k">Nadiad · Open 24 × 7</div>
+        <h1 class="cond">Game on,<br /><span>day or night</span></h1>
+        <p>Box cricket, football and Nadiad's only synthetic pickleball court. Check free slots and book in one message.</p>
+        <div class="cta"><a class="btn btn-yellow" href="#slots">Free slots</a><a class="btn btn-wa" href="#">WhatsApp</a></div>
+      </div>
+    </section>
+
+    <div class="mini-row">
+      <div class="tile mini"><b class="cond">24×7</b><span>Always open</span></div>
+      <div class="tile mini"><b class="cond">4.9★</b><span>120 Google reviews</span></div>
+    </div>
+
+    <section class="tile board-tile" id="slots">
+      <div class="k">Live scoreboard</div>
+      <h2 class="cond" style="margin-bottom:12px">Free slots</h2>
+      <div class="board">
+        <div class="board-top"><span class="led" style="color:var(--yellow)">WED 21 OCT</span><span class="live led">LIVE</span></div>
+        <div class="switch"><button class="on">Turf · 🏏⚽</button><button>Pickleball · 🏓</button></div>
+        <div class="days"><button class="on">TODAY</button><button>THU 22</button><button>FRI 23</button><button>SAT 24</button><button>SUN 25</button><button>📅 DATE</button></div>
+        <div class="lines">
+          <div class="line"><span class="t">5 PM</span><span class="dots"><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i><i class="o"></i></span><span class="s o">OVER</span></div>
+          <div class="line"><span class="t">6 PM</span><span class="dots"><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></span><span class="s b">BOOKED</span></div>
+          <div class="line"><span class="t">7 PM</span><span class="dots"><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="s p">FREE 7:30→</span></div>
+          <div class="line"><span class="t">8 PM</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="s f">FREE</span></div>
+          <div class="line"><span class="t">9 PM</span><span class="dots"><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></span><span class="s b">BOOKED</span></div>
+          <div class="line"><span class="t">10 PM</span><span class="dots"><i></i><i></i><i></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></span><span class="s p">FREE →10:15</span></div>
+          <div class="line"><span class="t">11 PM</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="s f">FREE</span></div>
+        </div>
+        <div class="note">Each light = 5 minutes. Tap a green hour to book on WhatsApp. ▾ Night · Morning · Afternoon</div>
+      </div>
+    </section>
+
+    <div class="price-wrap" id="prices">
+      <section class="tile price-tile">
+        <div class="k">Price per hour</div>
+        <div class="p-row"><span class="n">🏏 Cricket</span><span class="v"><small>MON-FRI</small><b>₹800</b></span><span class="v"><small>SAT-SUN</small><b>₹1000</b></span></div>
+        <div class="p-row"><span class="n">⚽ Football</span><span class="v"><small>MON-FRI</small><b>₹800</b></span><span class="v"><small>SAT-SUN</small><b>₹1000</b></span></div>
+        <div class="p-row"><span class="n">🏓 Pickle</span><span class="v"><small>MON-FRI</small><b>₹400</b></span><span class="v"><small>SAT-SUN</small><b>₹500</b></span></div>
+      </section>
+    </div>
+
+    <section class="tile pickle-tile">
+      <div class="court"></div>
+      <div class="k" style="color:var(--yellow)">Only in Nadiad</div>
+      <h2 class="cond">Synthetic pickleball court</h2>
+      <p style="margin:6px 0 0;max-width:260px;color:#e3ebfb">Proper surface, lines and net. Easy to learn — fun for all ages.</p>
+    </section>
+
+    <section class="tile why-tile">
+      <div class="k">Why SSquare</div>
+      <h2 class="cond">Built for players</h2>
+      <ul class="why-list">
+        <li>Open 24 hours — early morning or late night</li>
+        <li>Bright floodlights for night matches</li>
+        <li>Well-kept turf, cleaned regularly</li>
+        <li>Safe, decent, family-friendly place</li>
+        <li>Book in one WhatsApp message</li>
+      </ul>
+    </section>
+
+    <section class="tile photo-tile" id="photos">
+      <div class="k">Photos</div>
+      <h2 class="cond">The arena</h2>
+      <div class="photos">
+        <div style="background-image:url(../public/images/gallery/turf-night.svg)"></div>
+        <div style="background-image:url(../public/images/gallery/pickleball-1.svg)"></div>
+        <div style="background-image:url(../public/images/gallery/turf-1.svg)"></div>
+        <div style="background-image:url(../public/images/gallery/pickleball-2.svg)"></div>
+      </div>
+    </section>
+
+    <section class="tile review-tile">
+      <div class="k">Google reviews</div>
+      <div class="stars">★★★★★</div>
+      <p class="q">"Best turf in Nadiad. Lights are very good and booking on WhatsApp is so easy."</p>
+      <small style="color:var(--muted)">— Rahul P. · 2 weeks ago</small>
+    </section>
+
+    <section class="tile visit-tile" id="visit">
+      <div class="k">Visit</div>
+      <h2 class="cond">Find us in Nadiad</h2>
+      <div class="map">📍 Google Map here</div>
+      <div class="faq" style="margin-top:10px">
+        <details open><summary>What are the timings?</summary><p>Open 24 hours, all 7 days.</p></details>
+        <details><summary>How do I book?</summary><p>Tap a free slot and send us a WhatsApp message, or call.</p></details>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer><div class="wrap">© 2026 SSquare Sports Arena, Nadiad</div></footer>
+
+<div class="sticky-cta">
+  <a class="btn" href="#" style="background:#0c160b;color:#fff;border:1px solid var(--chalk)">📞 Call</a>
+  <a class="btn btn-wa" href="#">WhatsApp</a>
+  <a class="btn btn-lime" href="#slots">Slots</a>
+</div>
+
+<script>
+  document.querySelectorAll(".switch button, .days button").forEach((b) =>
+    b.addEventListener("click", () => {
+      b.parentElement.querySelectorAll("button").forEach((x) => x.classList.remove("on"));
+      b.classList.add("on");
+    }),
+  );
+</script>
+</body>
+</html>

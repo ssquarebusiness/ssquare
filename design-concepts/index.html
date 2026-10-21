@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SSquare — Website design concepts</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #eef1ea; color: #111; }
+  header { padding: 28px 20px 8px; max-width: 1300px; margin: 0 auto; }
+  h1 { margin: 0 0 6px; font-size: 28px; }
+  header p { margin: 0; color: #555; max-width: 760px; }
+  .grid { display: grid; gap: 28px; padding: 24px 20px 48px; max-width: 1300px; margin: 0 auto; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+  .concept h2 { margin: 0 0 4px; font-size: 20px; }
+  .concept p { margin: 0 0 12px; color: #555; font-size: 14px; min-height: 60px; }
+  .phone { width: 360px; max-width: 100%; height: 740px; border-radius: 44px; background: #111; padding: 12px; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.5); margin: 0 auto; }
+  .phone iframe { width: 100%; height: 100%; border: 0; border-radius: 34px; background: #fff; }
+  .links { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+  .links a { font-weight: 600; font-size: 14px; color: #0b3d2e; background: #fff; border: 1px solid #d5dccc; border-radius: 999px; padding: 8px 14px; text-decoration: none; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tags span { font-size: 12px; font-weight: 600; background: #fff; border: 1px solid #d5dccc; border-radius: 999px; padding: 3px 9px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>SSquare website — 3 design concepts</h1>
+  <p>Same content in each, so only the look and layout differ. Scroll inside each phone, or open the full page to see the desktop layout. The slot grid, prices, reviews and photos are sample data.</p>
+</header>
+<div class="grid">
+  <div class="concept">
+    <h2>A · Floodlight Night</h2>
+    <div class="tags"><span>Dark</span><span>Neon green glow</span><span>Bold sporty type</span></div>
+    <p>Black background with glowing green, like the logo and a turf under floodlights. Most energetic; closest match to the logo.</p>
+    <div class="phone"><iframe src="concept-a-floodlight.html" title="Concept A"></iframe></div>
+    <div class="links"><a href="concept-a-floodlight.html" target="_blank">Open full page ↗</a></div>
+  </div>
+  <div class="concept">
+    <h2>B · Matchday Bright</h2>
+    <div class="tags"><span>Light</span><span>Friendly & family</span><span>Rounded cards</span></div>
+    <p>Black hero band for the logo, then a bright, airy page. Green buttons, yellow highlights. Easiest to read in sunlight; feels welcoming to families.</p>
+    <div class="phone"><iframe src="concept-b-matchday.html" title="Concept B"></iframe></div>
+    <div class="links"><a href="concept-b-matchday.html" target="_blank">Open full page ↗</a></div>
+  </div>
+  <div class="concept">
+    <h2>C · Scoreboard Pitch</h2>
+    <div class="tags"><span>Turf stripes</span><span>Stadium scoreboard</span><span>Bento tiles</span></div>
+    <p>Mowed-turf background with chalk lines. Free slots shown as a glowing stadium scoreboard; content in compact tiles. Most unique, very "sports".</p>
+    <div class="phone"><iframe src="concept-c-scoreboard.html" title="Concept C"></iframe></div>
+    <div class="links"><a href="concept-c-scoreboard.html" target="_blank">Open full page ↗</a></div>
+  </div>
+</div>
+</body>
+</html>

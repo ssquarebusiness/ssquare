@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Concept B — Matchday Bright · SSquare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0e1a0c;
+    --paper: #f6f8f1;
+    --white: #ffffff;
+    --green-900: #173d0b;
+    --green-700: #2e6b12;
+    --green-600: #3d8a17;
+    --green-500: #4fa81f;
+    --green-100: #e5f3d6;
+    --yellow: #f6cf1d;
+    --yellow-100: #fff6cc;
+    --blue: #2f63d6;
+    --blue-100: #e3ebfb;
+    --muted: #5d6b57;
+    --line: #e2e8da;
+    --booked: #e5484d;
+    --free: #3fae4f;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Nunito Sans", system-ui, sans-serif; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  h1, h2, h3, .head { font-family: "Archivo Black", "Nunito Sans", sans-serif; font-weight: 400; letter-spacing: -0.01em; }
+  .concept-tag { position: fixed; top: 10px; right: 10px; z-index: 99; background: var(--blue); color: #fff; font: 800 12px "Nunito Sans"; padding: 6px 10px; border-radius: 999px; }
+
+  header { position: sticky; top: 0; z-index: 40; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: "Archivo Black"; font-size: 20px; color: var(--green-900); }
+  .brand img { width: 40px; height: 40px; border-radius: 10px; }
+  .nav-links { display: none; gap: 24px; font-weight: 700; color: var(--muted); }
+  .nav-links a:hover { color: var(--green-700); }
+  .lang { display: none; gap: 2px; font-size: 13px; font-weight: 700; background: var(--paper); border-radius: 999px; padding: 3px; }
+  .lang a { padding: 4px 10px; border-radius: 999px; color: var(--muted); }
+  .lang a.on { background: var(--white); color: var(--green-700); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800; border-radius: 999px; padding: 14px 22px; border: 0; cursor: pointer; font-size: 16px; }
+  .btn-green { background: var(--green-600); color: #fff; box-shadow: 0 8px 20px -8px rgba(61, 138, 23, 0.7); }
+  .btn-yellow { background: var(--yellow); color: #1d1800; }
+  .btn-white { background: #fff; color: var(--ink); }
+  .btn-wa { background: #22c35e; color: #fff; }
+  .btn-sm { padding: 9px 16px; font-size: 14px; }
+  .menu-btn { background: var(--paper); border: 0; border-radius: 12px; width: 42px; height: 42px; font-size: 20px; }
+
+  /* Hero: black band so the logo sits naturally, then the page turns bright */
+  .hero { background: #050705; color: #fff; padding: 22px 0 0; position: relative; overflow: hidden; }
+  .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 64px; background: var(--paper); clip-path: ellipse(75% 100% at 50% 100%); }
+  .hero-grid { position: relative; z-index: 1; display: grid; gap: 22px; align-items: center; padding-bottom: 86px; }
+  .hero-logo { width: min(56vw, 220px); margin: 0 auto; border-radius: 24px; }
+  .hero .tag { display: inline-flex; gap: 6px; background: var(--yellow); color: #1d1800; font-weight: 800; font-size: 13px; padding: 6px 12px; border-radius: 999px; }
+  .hero h1 { font-size: clamp(32px, 8.5vw, 58px); line-height: 1.05; margin: 14px 0 10px; }
+  .hero h1 span { color: #8ad63b; }
+  .hero p { color: #c9d6c2; font-size: 17px; margin: 0 0 22px; max-width: 540px; }
+  .cta { display: grid; gap: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chips span { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 700; }
+
+  section { padding: 52px 0; }
+  .head-row { margin-bottom: 20px; }
+  .head-row .eyebrow { display: inline-block; background: var(--green-100); color: var(--green-700); font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .head-row h2 { font-size: clamp(26px, 6.5vw, 40px); margin: 10px 0 6px; line-height: 1.1; color: var(--green-900); }
+  .head-row p { color: var(--muted); margin: 0; }
+
+  /* Quick booking card overlapping the hero */
+  .quick { margin-top: -70px; position: relative; z-index: 2; }
+  .card { background: var(--white); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 20px 50px -24px rgba(23, 61, 11, 0.35); }
+  .slots { padding: 16px; }
+  .slots-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .slots-top h2 { margin: 0; font-size: 22px; color: var(--green-900); }
+  .slots-top small { color: var(--muted); font-weight: 700; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--paper); padding: 5px; border-radius: 16px; }
+  .seg button { border: 0; background: none; padding: 11px 6px; border-radius: 12px; font-weight: 800; color: var(--muted); font-size: 14.5px; cursor: pointer; font-family: inherit; }
+  .seg button.on { background: var(--white); color: var(--green-700); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+  .days { display: flex; gap: 8px; overflow-x: auto; padding: 14px 0 8px; scrollbar-width: none; }
+  .days button { flex: 0 0 auto; min-width: 64px; border: 1.5px solid var(--line); background: #fff; border-radius: 16px; padding: 8px 6px; text-align: center; cursor: pointer; font-family: inherit; color: var(--ink); }
+  .days small { display: block; font-size: 11px; color: var(--muted); font-weight: 700; }
+  .days b { font-size: 19px; }
+  .days button.on { background: var(--green-600); border-color: var(--green-600); color: #fff; }
+  .days button.on small { color: #d8f1c5; }
+  .legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); font-weight: 700; margin: 6px 0 12px; }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+  .partbar { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-bottom: 10px; }
+  .partbar button { flex: 0 0 auto; border: 0; border-radius: 999px; padding: 7px 13px; font-weight: 800; font-size: 13px; background: var(--paper); color: var(--muted); font-family: inherit; cursor: pointer; }
+  .partbar button.on { background: var(--yellow-100); color: #6b5400; box-shadow: inset 0 0 0 1.5px var(--yellow); }
+  .hours { display: grid; gap: 8px; }
+  .hr { display: grid; grid-template-columns: 50px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 14px; background: #fafcf7; border: 1px solid var(--line); }
+  .hr .t { font-weight: 800; font-size: 13.5px; }
+  .hr .bar { position: relative; height: 22px; border-radius: 999px; background: var(--free); overflow: hidden; }
+  .hr .bar i { position: absolute; top: 0; bottom: 0; background: var(--booked); }
+  .hr .bar u { position: absolute; top: 0; bottom: 0; left: 0; background: #cfd6ca; text-decoration: none; }
+  .hr .lbl { font-size: 12.5px; font-weight: 800; min-width: 92px; text-align: right; }
+  .lbl.free { color: #22813a; } .lbl.booked { color: #c62f35; } .lbl.partial { color: #9a6b00; } .lbl.past { color: #9aa494; }
+  .hr.tap { cursor: pointer; } .hr.tap:active { background: var(--green-100); }
+
+  /* Sports */
+  .sports { display: grid; gap: 14px; }
+  .sport { background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 18px; position: relative; overflow: hidden; }
+  .sport .ico { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; font-size: 30px; margin-bottom: 12px; }
+  .sport h3 { margin: 0 0 4px; font-size: 22px; color: var(--green-900); }
+  .sport p { margin: 0 0 14px; color: var(--muted); }
+  .sport .tbl { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .sport .tbl div { padding: 10px 12px; }
+  .sport .tbl div + div { border-left: 1px solid var(--line); }
+  .sport .tbl small { display: block; color: var(--muted); font-weight: 700; font-size: 12px; }
+  .sport .tbl b { font-family: "Archivo Black"; font-weight: 400; font-size: 22px; }
+  .sport .ribbon { position: absolute; top: 16px; right: -34px; transform: rotate(35deg); background: var(--yellow); font-size: 11px; font-weight: 800; padding: 4px 40px; }
+
+  /* Why */
+  .why { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .why div { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 16px; }
+  .why .e { font-size: 26px; }
+  .why b { display: block; margin: 6px 0 2px; font-size: 15px; }
+  .why span { color: var(--muted); font-size: 13.5px; }
+
+  /* Gallery: big + small mosaic */
+  .mosaic { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mosaic div { border-radius: 20px; background-size: cover; background-position: center; aspect-ratio: 1; }
+  .mosaic div:first-child { grid-column: span 2; aspect-ratio: 16/10; }
+
+  /* Reviews */
+  .score { display: flex; gap: 16px; align-items: center; background: var(--green-900); color: #fff; border-radius: 22px; padding: 18px; margin-bottom: 14px; }
+  .score b { font-family: "Archivo Black"; font-size: 46px; line-height: 1; color: var(--yellow); }
+  .reviews { display: grid; gap: 10px; }
+  .review { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 16px; }
+  .review header { position: static; background: none; border: 0; display: flex; justify-content: space-between; backdrop-filter: none; }
+  .stars { color: #e3a900; letter-spacing: 1px; }
+  .review p { margin: 8px 0 0; }
+
+  .visit { display: grid; gap: 14px; }
+  .map { height: 230px; border-radius: 24px; background: linear-gradient(135deg, #dfead4, #c8dcb9); display: grid; place-items: center; color: var(--green-700); font-weight: 800; }
+  .contact-card { background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 18px; display: grid; gap: 10px; }
+  .faq details { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; margin-bottom: 8px; }
+  .faq summary { font-weight: 800; cursor: pointer; }
+  .faq p { color: var(--muted); margin: 8px 0 0; }
+
+  footer { background: var(--green-900); color: #cfe3c2; padding: 34px 0 110px; font-size: 14px; }
+  .sticky-cta { position: fixed; left: 12px; right: 12px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 50; display: grid; grid-template-columns: auto auto 1fr; gap: 8px; background: #fff; border-radius: 999px; padding: 6px; box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.35); border: 1px solid var(--line); }
+  .sticky-cta a { border-radius: 999px; padding: 11px 16px; font-weight: 800; font-size: 14px; text-align: center; }
+
+  @media (min-width: 768px) {
+    .wrap { padding: 0 28px; }
+    .nav-links, .lang { display: flex; }
+    .menu-btn { display: none; }
+    .hero { padding-top: 48px; }
+    .hero-grid { grid-template-columns: 1.15fr 0.85fr; padding-bottom: 130px; }
+    .hero-logo { order: 2; width: 380px; }
+    .cta { grid-template-columns: auto auto; justify-content: start; }
+    .quick { margin-top: -110px; }
+    .slots { padding: 26px; display: grid; grid-template-columns: 300px 1fr; gap: 28px; }
+    .sports { grid-template-columns: repeat(3, 1fr); }
+    .why { grid-template-columns: repeat(3, 1fr); }
+    .mosaic { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .mosaic div:first-child { grid-column: 1; grid-row: span 2; aspect-ratio: auto; }
+    .reviews { grid-template-columns: repeat(3, 1fr); }
+    .visit { grid-template-columns: 1.4fr 1fr; }
+    .sticky-cta { display: none; }
+    footer { padding-bottom: 34px; }
+  }
+</style>
+</head>
+<body>
+<div class="concept-tag">Concept B · Matchday Bright</div>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#"><img src="../public/images/logo-emblem.webp" alt="" />SSquare</a>
+    <nav class="nav-links"><a href="#slots">Free slots</a><a href="#sports">Prices</a><a href="#photos">Photos</a><a href="#visit">Contact</a></nav>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="lang"><a class="on">EN</a><a>ગુજ</a><a>हिं</a></div>
+      <a class="btn btn-green btn-sm" href="#slots">Book now</a>
+      <button class="menu-btn" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <img class="hero-logo" src="../public/images/logo.webp" alt="SSquare — Cricket Box, Pickleball, Football Turf" />
+      <div>
+        <span class="tag">🏓 Nadiad's only synthetic pickleball court</span>
+        <h1>Your game, <span>your time.</span><br />Open 24 hours.</h1>
+        <p>Box cricket, football and pickleball for friends, families and office teams — in the heart of Nadiad.</p>
+        <div class="cta">
+          <a class="btn btn-yellow" href="#slots">See free slots</a>
+          <a class="btn btn-wa" href="#">Book on WhatsApp</a>
+        </div>
+        <div class="chips"><span>🕒 Open 24 × 7</span><span>💡 Floodlights</span><span>👨‍👩‍👧 Family friendly</span><span>🅿️ Parking</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap quick" id="slots">
+    <div class="card slots">
+      <div>
+        <div class="slots-top"><h2>Free slots</h2><small>Updates live</small></div>
+        <div class="seg"><button class="on">🏏⚽ Turf</button><button>🏓 Pickleball</button></div>
+        <div class="days">
+          <button class="on"><small>Today</small><b>21</b><small>Oct</small></button>
+          <button><small>Tomorrow</small><b>22</b><small>Oct</small></button>
+          <button><small>Fri</small><b>23</b><small>Oct</small></button>
+          <button><small>Sat</small><b>24</b><small>Oct</small></button>
+          <button><small>📅</small><b style="font-size:13px">More</b></button>
+        </div>
+        <div class="legend"><span><i style="background:var(--free)"></i>Free</span><span><i style="background:var(--booked)"></i>Booked</span><span><i style="background:#cfd6ca"></i>Over</span></div>
+      </div>
+      <div>
+        <div class="partbar"><button>🌙 Night</button><button>🌅 Morning</button><button>☀️ Afternoon</button><button class="on">🌇 Evening</button></div>
+        <div class="hours">
+          <div class="hr"><span class="t">6 PM</span><span class="bar"><i style="left:0;width:100%"></i></span><span class="lbl booked">Booked</span></div>
+          <div class="hr tap"><span class="t">7 PM</span><span class="bar"><i style="left:0;width:50%"></i></span><span class="lbl partial">Free from 7:30</span></div>
+          <div class="hr tap"><span class="t">8 PM</span><span class="bar"></span><span class="lbl free">Free · Tap to book</span></div>
+          <div class="hr"><span class="t">9 PM</span><span class="bar"><i style="left:0;width:100%"></i></span><span class="lbl booked">Booked</span></div>
+          <div class="hr tap"><span class="t">10 PM</span><span class="bar"><i style="left:25%;width:75%"></i></span><span class="lbl partial">Free till 10:15</span></div>
+          <div class="hr tap"><span class="t">11 PM</span><span class="bar"></span><span class="lbl free">Free · Tap to book</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="sports">
+    <div class="wrap">
+      <div class="head-row"><span class="eyebrow">Prices</span><h2>Three sports, one arena</h2><p>Per-hour prices. Book 1 hour, 1½ hours or longer.</p></div>
+      <div class="sports">
+        <div class="sport"><div class="ico" style="background:var(--yellow-100)">🏏</div><h3>Box Cricket</h3><p>Full turf for your team.</p>
+          <div class="tbl"><div><small>Mon – Fri</small><b>₹800</b><small>per hour</small></div><div><small>Sat – Sun</small><b>₹1,000</b><small>per hour</small></div></div></div>
+        <div class="sport"><div class="ico" style="background:var(--green-100)">⚽</div><h3>Football</h3><p>Same turf, goals ready.</p>
+          <div class="tbl"><div><small>Mon – Fri</small><b>₹800</b><small>per hour</small></div><div><small>Sat – Sun</small><b>₹1,000</b><small>per hour</small></div></div></div>
+        <div class="sport"><span class="ribbon">ONLY IN NADIAD</span><div class="ico" style="background:var(--blue-100)">🏓</div><h3>Pickleball</h3><p>Synthetic court, easy to learn.</p>
+          <div class="tbl"><div><small>Mon – Fri</small><b>₹400</b><small>per hour</small></div><div><small>Sat – Sun</small><b>₹500</b><small>per hour</small></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#fff">
+    <div class="wrap">
+      <div class="head-row"><span class="eyebrow">Why SSquare</span><h2>Everyone is welcome</h2></div>
+      <div class="why">
+        <div><span class="e">🏆</span><b>Only synthetic pickleball</b><span>The real surface, in Nadiad.</span></div>
+        <div><span class="e">🕒</span><b>Open 24 hours</b><span>Morning, evening or late night.</span></div>
+        <div><span class="e">💡</span><b>Bright floodlights</b><span>Night feels like day.</span></div>
+        <div><span class="e">👨‍👩‍👧</span><b>Family friendly</b><span>Clean and decent place.</span></div>
+        <div><span class="e">🌿</span><b>Well-kept turf</b><span>Cleaned regularly.</span></div>
+        <div><span class="e">📲</span><b>Easy booking</b><span>One WhatsApp message.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="photos">
+    <div class="wrap">
+      <div class="head-row"><span class="eyebrow">Photos</span><h2>Take a look</h2></div>
+      <div class="mosaic">
+        <div style="background-image:url(../public/images/gallery/turf-night.svg)"></div>
+        <div style="background-image:url(../public/images/gallery/pickleball-1.svg)"></div>
+        <div style="background-image:url(../public/images/gallery/turf-1.svg)"></div>
+        <div style="background-image:url(../public/images/gallery/pickleball-2.svg)"></div>
+        <div style="background-image:url(../public/images/gallery/turf-night.svg)"></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#fff">
+    <div class="wrap">
+      <div class="head-row"><span class="eyebrow">Google reviews</span><h2>What players say</h2></div>
+      <div class="score"><b>4.9</b><div><div class="stars" style="color:var(--yellow)">★★★★★</div><small>120 reviews on Google</small></div></div>
+      <div class="reviews">
+        <div class="review"><header><b>Rahul P.</b><span class="stars">★★★★★</span></header><p>Best turf in Nadiad. Lights are very good and booking is easy.</p></div>
+        <div class="review"><header><b>Krupa S.</b><span class="stars">★★★★★</span></header><p>Played pickleball with family for the first time. Loved it!</p></div>
+        <div class="review"><header><b>Mehul D.</b><span class="stars">★★★★☆</span></header><p>Late night cricket after office is the best. Clean and safe.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap">
+      <div class="head-row"><span class="eyebrow">Visit</span><h2>Come play</h2></div>
+      <div class="visit">
+        <div class="map">📍 Google Map here</div>
+        <div class="contact-card">
+          <b style="font-size:18px">SSquare Sports Arena</b>
+          <span style="color:var(--muted)">Nadiad, Gujarat · Open 24 hours</span>
+          <a class="btn btn-green" href="#">📞 Call Shail</a>
+          <a class="btn btn-wa" href="#">WhatsApp us</a>
+          <a class="btn btn-white" style="border:1px solid var(--line)" href="#">Get directions</a>
+        </div>
+      </div>
+      <div class="faq" style="margin-top:24px">
+        <details open><summary>What are the timings?</summary><p>Open 24 hours, all 7 days.</p></details>
+        <details><summary>How do I book?</summary><p>Tap a free slot and send a WhatsApp message, or call.</p></details>
+        <details><summary>Can I book 1½ hours?</summary><p>Yes — any length, as long as the time is free.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">© 2026 SSquare Sports Arena, Nadiad</div></footer>
+
+<div class="sticky-cta">
+  <a href="#" style="background:var(--paper)">📞</a>
+  <a href="#" style="background:#22c35e;color:#fff">WhatsApp</a>
+  <a href="#slots" style="background:var(--green-600);color:#fff">See free slots</a>
+</div>
+
+<script>
+  document.querySelectorAll(".seg button, .days button, .partbar button").forEach((b) =>
+    b.addEventListener("click", () => {
+      b.parentElement.querySelectorAll("button").forEach((x) => x.classList.remove("on"));
+      b.classList.add("on");
+    }),
+  );
+</script>
+</body>
+</html>

@@ -1,6 +1,23 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "web", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 3000 }
+    {
+      "name": "web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "concepts",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "-e",
+        "const h=require('http'),f=require('fs'),p=require('path');const R='/Users/ayushgandhi/Documents/Projects/SSquare';const T={'.html':'text/html; charset=utf-8','.webp':'image/webp','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.css':'text/css','.js':'text/javascript'};h.createServer((q,s)=>{let u=decodeURIComponent(q.url.split('?')[0]);if(u==='/')u='/design-concepts/index.html';const fp=p.join(R,u);if(!fp.startsWith(R)){s.writeHead(403);return s.end();}f.readFile(fp,(e,b)=>{if(e){s.writeHead(404);return s.end('not found');}s.writeHead(200,{'Content-Type':T[p.extname(fp)]||'application/octet-stream'});s.end(b);});}).listen(4321,'127.0.0.1');"
+      ],
+      "port": 4321
+    }
   ]
 }
