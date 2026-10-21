@@ -57,7 +57,8 @@
     "cannotDeactivateSelf": "आप अपना खुद का अकाउंट बंद नहीं कर सकते.",
     "lastOwner": "कम से कम एक मालिक का अकाउंट चालू रहना चाहिए.",
     "passwordShort": "पासवर्ड कम से कम 8 अक्षर का होना चाहिए.",
-    "setupIncomplete": "डेटाबेस सेटअप पूरा नहीं है. कृपया नया Supabase migration चलाएं (README देखें)."
+    "setupIncomplete": "डेटाबेस सेटअप पूरा नहीं है. कृपया नया Supabase migration चलाएं (README देखें).",
+    "advanceNotEditable": "इस बुकिंग में एक से ज़्यादा एडवांस पेमेंट हैं, इसलिए यहां एडवांस नहीं बदला जा सकता."
   },
   "pwa": {
     "title": "SSquare ऐप इंस्टॉल करें",
@@ -168,7 +169,8 @@
       "takePayment": "पैसे लें और पूरा करें",
       "cancel": "बुकिंग रद्द करें",
       "completeTitle": "पैसे लें",
-      "cancelTitle": "बुकिंग रद्द करें"
+      "cancelTitle": "बुकिंग रद्द करें",
+      "edit": "बुकिंग बदलें"
     },
     "complete": {
       "remaining": "बाकी राशि",
@@ -246,14 +248,17 @@
         "total": "कुल राशि लिखें.",
         "advance": "एडवांस कुल राशि से ज़्यादा नहीं हो सकता.",
         "bookedBy": "किसने बुक किया, चुनें."
-      }
+      },
+      "saveChanges": "बदलाव सेव करें",
+      "editTitle": "बुकिंग बदलें"
     },
     "confirmation": {
       "title": "बुकिंग सेव हुई",
       "language": "मैसेज की भाषा",
       "copy": "कॉपी",
       "copied": "मैसेज कॉपी हुआ",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "titleUpdated": "बुकिंग अपडेट हुई"
     },
     "bookings": {
       "title": "बुकिंग",

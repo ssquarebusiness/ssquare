@@ -57,7 +57,8 @@
     "cannotDeactivateSelf": "You cannot turn off your own account.",
     "lastOwner": "At least one owner account must stay active.",
     "passwordShort": "Password must be at least 8 characters.",
-    "setupIncomplete": "Database setup is not complete. Please run the latest Supabase migration (see README)."
+    "setupIncomplete": "Database setup is not complete. Please run the latest Supabase migration (see README).",
+    "advanceNotEditable": "This booking has more than one advance payment, so the advance can't be changed here."
   },
   "pwa": {
     "title": "Install the SSquare app",
@@ -168,7 +169,8 @@
       "takePayment": "Take payment & complete",
       "cancel": "Cancel booking",
       "completeTitle": "Take payment",
-      "cancelTitle": "Cancel booking"
+      "cancelTitle": "Cancel booking",
+      "edit": "Edit booking"
     },
     "complete": {
       "remaining": "Remaining amount",
@@ -246,14 +248,17 @@
         "total": "Enter the total amount.",
         "advance": "Advance cannot be more than the total.",
         "bookedBy": "Choose who booked."
-      }
+      },
+      "saveChanges": "Save changes",
+      "editTitle": "Edit booking"
     },
     "confirmation": {
       "title": "Booking saved",
       "language": "Message language",
       "copy": "Copy",
       "copied": "Message copied",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "titleUpdated": "Booking updated"
     },
     "bookings": {
       "title": "Bookings",

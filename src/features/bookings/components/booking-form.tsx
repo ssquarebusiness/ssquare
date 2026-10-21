@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,12 +17,12 @@ import { computeTotal, rateAt } from "@/lib/pricing";
 import { qk } from "@/lib/query-keys";
 import { overlaps } from "@/lib/slots";
 import { atIST, formatMinutes, istDateStr, istMinutesOfDay, type DateStr } from "@/lib/time";
-import type { Booking } from "@/lib/types";
+import type { Booking, BookingSummary, Payment } from "@/lib/types";
 import { normalizePhone } from "@/lib/utils";
 import { durationLabel } from "@/lib/i18n-helpers";
-import { createBookingAction } from "../actions";
+import { createBookingAction, updateBookingAction } from "../actions";
 import { findCustomerByPhone, useBusyTimes } from "../queries";
-import { createBookingSchema } from "../schema";
+import { createBookingSchema, updateBookingSchema } from "../schema";
 import { BookingConfirmation } from "./booking-confirmation";
 import { DayStrip } from "./day-strip";
 
@@ -35,7 +35,29 @@ function defaultStart(date: DateStr) {
   return Math.min(Math.ceil((istMinutesOfDay(new Date()) + 1) / STEP) * STEP, 1440 - STEP);
 }
 
-export function BookingForm({ initialDate, initialCourt }: { initialDate: DateStr; initialCourt?: CourtSlug }) {
+/** An existing booking being edited by an owner, with its advance payment (if any). */
+export type EditingBooking = { booking: BookingSummary; advance: Payment | null };
+
+/** Splits a saved duration into a preset chip or the "Other" picker. */
+function initialDuration(minutes: number) {
+  return (businessConfig.durationPresets as readonly number[]).includes(minutes)
+    ? { preset: minutes, custom: 150 }
+    : { preset: CUSTOM, custom: minutes };
+}
+
+export function BookingForm({
+  initialDate,
+  initialCourt,
+  editing,
+}: {
+  initialDate: DateStr;
+  initialCourt?: CourtSlug;
+  /** When set, the form edits this booking instead of creating a new one (owners only). */
+  editing?: EditingBooking;
+}) {
+  const eb = editing?.booking;
+  const ebStart = eb ? new Date(eb.start_at) : null;
+  const ebDuration = eb ? initialDuration(Math.round((new Date(eb.end_at).getTime() - new Date(eb.start_at).getTime()) / 60_000)) : null;
   const t = useTranslations("staff.bookingForm");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
@@ -51,22 +73,24 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   const owners = (profiles ?? []).filter((p) => p.role === "owner" && p.is_active);
   const activeStaff = (profiles ?? []).filter((p) => p.is_active);
 
-  const [court, setCourt] = useState<CourtSlug>(initialCourt ?? "turf");
+  const startCourt = eb?.court_slug ?? initialCourt ?? "turf";
+  const [court, setCourt] = useState<CourtSlug>(startCourt);
   // First sport of the court is pre-selected (turf → cricket, pickleball → pickleball) so a price shows at once.
-  const [sport, setSport] = useState<string>(COURT_SPORTS[initialCourt ?? "turf"][0]);
-  const [date, setDate] = useState<DateStr>(initialDate);
-  const [startMin, setStartMin] = useState(() => defaultStart(initialDate));
-  const [preset, setPreset] = useState<number>(60);
-  const [customMin, setCustomMin] = useState(150);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [totalInput, setTotalInput] = useState<string | null>(null); // null = use auto price
-  const [advance, setAdvance] = useState("0");
-  const [advanceMethod, setAdvanceMethod] = useState<PaymentMethod>("upi");
-  const [advanceBy, setAdvanceBy] = useState(me.id);
-  const [bookedBy, setBookedBy] = useState<string | null>(me.role === "owner" ? me.id : null);
-  const [notes, setNotes] = useState("");
+  const [sport, setSport] = useState<string>(eb?.sport ?? COURT_SPORTS[startCourt][0]);
+  const [date, setDate] = useState<DateStr>(ebStart ? istDateStr(ebStart) : initialDate);
+  const [startMin, setStartMin] = useState(() => (ebStart ? istMinutesOfDay(ebStart) : defaultStart(initialDate)));
+  const [preset, setPreset] = useState<number>(ebDuration?.preset ?? 60);
+  const [customMin, setCustomMin] = useState(ebDuration?.custom ?? 150);
+  const [name, setName] = useState(eb?.customer_name ?? "");
+  const [phone, setPhone] = useState(eb?.customer_phone ?? "");
+  const [email, setEmail] = useState(eb?.customer_email ?? "");
+  // null = use the auto price. When editing, keep the saved total until the time / sport changes.
+  const [totalInput, setTotalInput] = useState<string | null>(eb ? String(eb.total_amount) : null);
+  const [advance, setAdvance] = useState(String(editing?.advance?.amount ?? 0));
+  const [advanceMethod, setAdvanceMethod] = useState<PaymentMethod>(editing?.advance?.method ?? "upi");
+  const [advanceBy, setAdvanceBy] = useState(editing?.advance?.received_by ?? me.id);
+  const [bookedBy, setBookedBy] = useState<string | null>(eb?.booked_by ?? (me.role === "owner" ? me.id : null));
+  const [notes, setNotes] = useState(eb?.notes ?? "");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [repeat, setRepeat] = useState(false);
   const [created, setCreated] = useState<Booking | null>(null);
@@ -84,8 +108,15 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   );
   const hourlyRate = rates ? rateAt(rates, sport, start) : null;
 
-  // A typed total is a one-off change: picking a new sport, date or time brings back the rate price.
-  useEffect(() => setTotalInput(null), [sport, date, startMin, duration]);
+  // A typed (or saved) total is a one-off: picking a new sport, date or time brings back the rate price.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    setTotalInput(null);
+  }, [sport, date, startMin, duration]);
   const total = totalInput == null ? autoTotal ?? 0 : parseAmount(totalInput);
   const advanceAmount = parseAmount(advance);
 
@@ -93,7 +124,12 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   const busyToday = useBusyTimes(date);
   const nextDay = istDateStr(new Date(atIST(date, 1440).getTime()));
   const busyNext = useBusyTimes(nextDay);
-  const busy = [...(busyToday.data ?? []), ...(busyNext.data ?? [])].filter((b) => b.court_slug === court);
+  const isSelf = (b: { court_slug: string; start_at: string; end_at: string }) =>
+    !!eb && b.court_slug === eb.court_slug &&
+    new Date(b.start_at).getTime() === new Date(eb.start_at).getTime() &&
+    new Date(b.end_at).getTime() === new Date(eb.end_at).getTime();
+  // When editing, the booking's own (old) time is not a clash.
+  const busy = [...(busyToday.data ?? []), ...(busyNext.data ?? [])].filter((b) => b.court_slug === court && !isSelf(b));
   const clash = overlaps(start, end, busy.map((b) => ({ start: b.start_at, end: b.end_at })));
 
   // Repeat customer: fill the name from their last booking.
@@ -138,7 +174,7 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
       advanceReceivedBy: advanceBy,
       notes: notes.trim() || undefined,
     };
-    const parsed = createBookingSchema.safeParse(input);
+    const parsed = eb ? updateBookingSchema.safeParse({ ...input, bookingId: eb.id }) : createBookingSchema.safeParse(input);
     if (!parsed.success) {
       const errs: Record<string, string> = {};
       for (const issue of parsed.error.issues) errs[String(issue.path[0])] ??= issue.message;
@@ -152,7 +188,9 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
     }
     setErrors({});
     startTransition(async () => {
-      const res = await createBookingAction(parsed.data);
+      const res = eb
+        ? await updateBookingAction({ ...parsed.data, bookingId: eb.id })
+        : await createBookingAction(parsed.data);
       if (!res.ok) {
         toast(te(res.error), "error");
         return;
@@ -295,14 +333,16 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
       </section>
 
       <Button size="xl" block loading={pending} disabled={clash} onClick={submit}>
-        {t("save")}
+        {eb ? t("saveChanges") : t("save")}
       </Button>
 
       {created && (
         <BookingConfirmation
           booking={created}
           advance={advanceAmount}
-          onClose={() => router.push("/staff")}
+          updated={!!eb}
+          // New booking → back to Home. Edited booking → back to where the owner came from.
+          onClose={() => (eb ? router.back() : router.push("/staff"))}
         />
       )}
     </div>

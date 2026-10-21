@@ -17,7 +17,7 @@ import { whatsappHref } from "@/lib/utils";
 import { customerLabel, phoneLabel } from "@/lib/customer";
 
 /** Popup shown after saving a booking: full details + Copy + WhatsApp share. Closing it goes back home. */
-export function BookingConfirmation({ booking, advance, onClose }: { booking: Booking; advance: number; onClose: () => void }) {
+export function BookingConfirmation({ booking, advance, updated, onClose }: { booking: Booking; advance: number; updated?: boolean; onClose: () => void }) {
   const t = useTranslations("staff.confirmation");
   const uiLocale = useLocale() as Locale;
   const toast = useToast();
@@ -65,7 +65,7 @@ export function BookingConfirmation({ booking, advance, onClose }: { booking: Bo
     <Sheet
       open
       onClose={onClose}
-      title={<span className="flex items-center gap-2 text-brand-800"><Check className="size-6 rounded-full bg-brand-100 p-1" /> {t("title")}</span>}
+      title={<span className="flex items-center gap-2 text-brand-800"><Check className="size-6 rounded-full bg-brand-100 p-1" /> {t(updated ? "titleUpdated" : "title")}</span>}
       footer={
         <div className="grid grid-cols-2 gap-2 pb-1">
           <Button variant="outline" size="lg" onClick={copy}>

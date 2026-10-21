@@ -57,7 +57,8 @@
     "cannotDeactivateSelf": "તમે તમારું પોતાનું એકાઉન્ટ બંધ કરી શકતા નથી.",
     "lastOwner": "ઓછામાં ઓછું એક માલિકનું એકાઉન્ટ ચાલુ રહેવું જોઈએ.",
     "passwordShort": "પાસવર્ડ ઓછામાં ઓછો 8 અક્ષરનો હોવો જોઈએ.",
-    "setupIncomplete": "ડેટાબેઝ સેટઅપ પૂરું નથી. કૃપા કરીને નવું Supabase migration ચલાવો (README જુઓ)."
+    "setupIncomplete": "ડેટાબેઝ સેટઅપ પૂરું નથી. કૃપા કરીને નવું Supabase migration ચલાવો (README જુઓ).",
+    "advanceNotEditable": "આ બુકિંગમાં એકથી વધુ એડવાન્સ પેમેન્ટ છે, તેથી અહીં એડવાન્સ બદલી શકાતું નથી."
   },
   "pwa": {
     "title": "SSquare એપ ઇન્સ્ટોલ કરો",
@@ -168,7 +169,8 @@
       "takePayment": "પૈસા લો અને પૂર્ણ કરો",
       "cancel": "બુકિંગ રદ કરો",
       "completeTitle": "પૈસા લો",
-      "cancelTitle": "બુકિંગ રદ કરો"
+      "cancelTitle": "બુકિંગ રદ કરો",
+      "edit": "બુકિંગ બદલો"
     },
     "complete": {
       "remaining": "બાકી રકમ",
@@ -246,14 +248,17 @@
         "total": "કુલ રકમ લખો.",
         "advance": "એડવાન્સ કુલ રકમથી વધુ ન હોઈ શકે.",
         "bookedBy": "કોણે બુક કર્યું તે પસંદ કરો."
-      }
+      },
+      "saveChanges": "ફેરફાર સેવ કરો",
+      "editTitle": "બુકિંગ બદલો"
     },
     "confirmation": {
       "title": "બુકિંગ સેવ થયું",
       "language": "મેસેજની ભાષા",
       "copy": "કૉપિ",
       "copied": "મેસેજ કૉપિ થયો",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "titleUpdated": "બુકિંગ અપડેટ થયું"
     },
     "bookings": {
       "title": "બુકિંગ",

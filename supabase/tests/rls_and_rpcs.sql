@@ -123,6 +123,42 @@ do $$ begin
   raise notice 'ok: only owners change rates';
 end $$;
 
+-- ---- Owner edits a booking; caretaker cannot ----
+create temp table t3 as
+select (public.create_booking('turf', 'cricket', 'Edit Me', '9876543217', null,
+  public.ist_day_start(public.ist_today() + 5) + interval '10 hours',
+  public.ist_day_start(public.ist_today() + 5) + interval '11 hours', 800, null, 300, 'cash', null, null)).id as id;
+do $$ declare b public.bookings; r record; begin
+  -- move to football 10:00–11:30, new total 1200, advance changed to 500 UPI
+  b := public.update_booking((select id from t3), 'turf', 'football', 'Edited Name', '', null,
+    public.ist_day_start(public.ist_today() + 5) + interval '10 hours',
+    public.ist_day_start(public.ist_today() + 5) + interval '11 hours 30 minutes', 1200,
+    '00000000-0000-0000-0000-000000000001', 500, 'upi', null, 'note');
+  select * into r from public.booking_summary where id = b.id;
+  if r.sport <> 'football' or r.customer_phone is not null or r.total_amount <> 1200 or r.paid_amount <> 500 or r.remaining_amount <> 700 then
+    raise exception 'FAIL: edit result %', row_to_json(r); end if;
+  if (select method from public.payments where booking_id = b.id and kind = 'advance') <> 'upi' then raise exception 'FAIL: advance method'; end if;
+  -- advance removed when set to 0
+  perform public.update_booking(b.id, 'turf', 'football', null, null, null, b.start_at, b.end_at, 1200, null, 0, null, null, null);
+  if exists (select 1 from public.payments where booking_id = b.id) then raise exception 'FAIL: advance not removed'; end if;
+  raise notice 'ok: owner edits booking and advance';
+end $$;
+do $$ begin
+  -- moving onto another booking's time must fail (today 7 PM turf exists)
+  perform public.update_booking((select id from t3), 'turf', 'cricket', null, null, null,
+    public.ist_day_start(public.ist_today()) + interval '19 hours',
+    public.ist_day_start(public.ist_today()) + interval '20 hours', 800, null, 0, null, null, null);
+  raise exception 'FAIL: edit allowed overlap';
+exception when exclusion_violation then raise notice 'ok: edit cannot double-book';
+end $$;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000003', true);
+do $$ begin
+  perform public.update_booking((select id from t3), 'turf', 'cricket', null, null, null, now(), now() + interval '1 hour', 1, null, 0, null, null, null);
+  raise exception 'FAIL: caretaker edited';
+exception when insufficient_privilege then raise notice 'ok: caretaker cannot edit';
+end $$;
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000001', true);
+
 -- ---- Anonymous visitor ----
 reset role; set local role anon;
 do $$ begin

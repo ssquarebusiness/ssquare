@@ -2,7 +2,8 @@
 import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
-import { Camera, CheckCircle2, ImageIcon, Phone, Plus, X, XCircle } from "lucide-react";
+import Link from "next/link";
+import { Camera, CheckCircle2, ImageIcon, Pencil, Phone, Plus, X, XCircle } from "lucide-react";
 import { businessConfig } from "@/config/business";
 import type { Locale } from "@/i18n/routing";
 import { Button, buttonClass } from "@/components/ui/button";
@@ -141,6 +142,13 @@ function DetailView({ booking: b, onMode }: { booking: BookingSummary; onMode: (
             <XCircle className="size-5" /> {t("cancel")}
           </Button>
         </div>
+      )}
+
+      {/* Only owners can change booking details. */}
+      {isOwner && b.status !== "cancelled" && (
+        <Link href={`/staff/bookings/${b.id}/edit`} className={buttonClass("outline", "lg", "w-full")}>
+          <Pencil className="size-5" /> {t("edit")}
+        </Link>
       )}
     </div>
   );
