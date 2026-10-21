@@ -30,7 +30,8 @@ export function pageMetadata({ locale, path, title, description }: { locale: Loc
       description,
       url: localePath(locale, path),
       locale: localeTags[locale].replace("-", "_"),
+      images: [{ url: "/images/og.jpg", width: 1200, height: 630, alt: siteConfig.legalName }],
     },
-    twitter: { card: "summary_large_image", title, description },
+    twitter: { card: "summary_large_image", title, description, images: ["/images/og.jpg"] },
   };
 }

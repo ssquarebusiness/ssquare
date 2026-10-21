@@ -1,5 +1,5 @@
 /* SSquare service worker — offline support, smart caching and push notifications. */
-const VERSION = "v1";
+const VERSION = "v2"; // bump to refresh cached icons / pages on installed phones
 const STATIC_CACHE = `ssq-static-${VERSION}`;
 const PAGE_CACHE = `ssq-pages-${VERSION}`;
 const IMG_CACHE = `ssq-img-${VERSION}`;

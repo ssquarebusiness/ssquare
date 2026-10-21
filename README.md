@@ -60,7 +60,7 @@ Website: http://localhost:3000. Staff app: http://localhost:3000/staff
 
 **Photos:** put real photos in `public/images/gallery/` (JPG or WebP, about 1600 px wide) and list them in `siteConfig.gallery`. Next.js serves them resized and optimized.
 
-**Logo / app icon:** replace `scripts/assets/logo.svg`, then run `node scripts/generate-icons.mjs`.
+**Logo:** the official logo is `scripts/assets/logo-full.webp`. To change it, replace that file (square artwork) and run `node scripts/generate-icons.mjs`. This regenerates the website logo, the emblem used in the header, the favicon, the app icons and the WhatsApp/Facebook share image (`public/images/og.jpg`).
 
 > Before going live, search the code for `TODO`. Every placeholder (phone numbers, address, map pin) is marked. Set the real prices in the app under **More → Settings → Prices**.
 

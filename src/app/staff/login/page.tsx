@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { LoginForm } from "./login-form";
 import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { LanguageSwitcher } from "@/components/staff/language-switcher";
-import { Logo } from "@/components/logo";
+import { FullLogo } from "@/components/logo";
 
 export const metadata: Metadata = { title: "Login" };
 
@@ -17,7 +17,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       </div>
       <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-8 py-10">
         <div className="text-center">
-          <Logo className="mx-auto h-14 w-14" />
+          <FullLogo priority sizes="176px" className="mx-auto w-44 ring-1 ring-white/10" />
           <h1 className="mt-4 font-display text-3xl font-bold">{t("title")}</h1>
           <p className="mt-1 text-brand-200">{t("subtitle")}</p>
         </div>
