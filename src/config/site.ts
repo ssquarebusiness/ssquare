@@ -4,11 +4,13 @@
  *
  * Values marked TODO are placeholders — replace them with the real details.
  */
+import { resolveSiteUrl } from "@/lib/site-url";
+
 export const siteConfig = {
   name: "SSquare",
   legalName: "SSquare",
   tagline: "Cricket, Football Turf & Pickleball, Nadiad",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: resolveSiteUrl(),
 
   owners: ["Shail Patel", "Shubh Patel"],
 

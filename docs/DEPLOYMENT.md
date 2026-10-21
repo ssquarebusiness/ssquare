@@ -115,7 +115,7 @@ Add each one with all three environments ticked (**Production, Preview, Developm
 | `VAPID_PRIVATE_KEY` | VAPID Private Key | **Sensitive** |
 | `VAPID_SUBJECT` | `mailto:ssquarebusiness2503@gmail.com` | Any contact email |
 | `CRON_SECRET` | the random string | **Sensitive.** Vercel sends it to the daily job automatically |
-| `NEXT_PUBLIC_SITE_URL` | `https://<your-project>.vercel.app` for now | Change to your own domain in Step 6 |
+| `NEXT_PUBLIC_SITE_URL` | `https://<your-project>.vercel.app` for now | Change to your own domain in Step 6. If left empty, Vercel's own domain is used |
 | `GOOGLE_PLACES_API_KEY` | Google key | Optional |
 | `GOOGLE_PLACE_ID` | Place ID | Optional |
 
