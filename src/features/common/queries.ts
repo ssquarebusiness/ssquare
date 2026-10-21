@@ -1,11 +1,12 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { getSupabase } from "@/lib/supabase/client";
 import { qk } from "@/lib/query-keys";
 import type { RateRule } from "@/lib/pricing";
 import type { Court, Profile } from "@/lib/types";
 import type { Locale } from "@/i18n/routing";
+import { COURTS } from "@/config/business";
 
 export function useProfiles() {
   return useQuery({
@@ -41,13 +42,21 @@ export function useCourts() {
   });
 }
 
+/** Court display name: from the database if set, otherwise from the translation files. */
 export function useCourtName() {
   const locale = useLocale() as Locale;
+  const t = useTranslations("common.courts");
   const { data } = useCourts();
   return (slug: string) => {
     const c = data?.find((x) => x.slug === slug);
-    return c?.name_i18n[locale] ?? c?.name_i18n.en ?? slug;
+    return c?.name_i18n[locale] ?? (t.has(slug) ? t(slug) : c?.name_i18n.en ?? slug);
   };
+}
+
+/** Courts offered (from config), so pickers always show every court even before the DB loads. */
+export function useCourtOptions() {
+  const courtName = useCourtName();
+  return COURTS.map((slug) => ({ value: slug, label: courtName(slug) }));
 }
 
 export function useRates() {

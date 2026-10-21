@@ -16,18 +16,18 @@ export const siteConfig = {
     // Numbers WITHOUT +91 / spaces. Used for tel: links and WhatsApp.
     phones: [
       { name: "Shail Patel", number: "8469285158" }, // TODO
-      { name: "Shubh Patel", number: "9999999992" }, // TODO
+      { name: "Shubh Patel", number: "8980290119" }, // TODO
     ],
-    whatsapp: "9999999991", // TODO number that receives public booking enquiries
-    email: "ssquare.nadiad@gmail.com", // TODO
+    whatsapp: "8980290119", // TODO number that receives public booking enquiries
+    email: "ssquarebusiness2503@gmail.com", // TODO
     countryCode: "91",
   },
 
   address: {
-    street: "TODO: Street / Landmark", // TODO
+    street: "Inside Dumral Gate", // TODO
     locality: "Nadiad",
     region: "Gujarat",
-    postalCode: "387001", // TODO
+    postalCode: "387710", // TODO
     country: "IN",
   },
 
@@ -42,7 +42,7 @@ export const siteConfig = {
   },
 
   social: {
-    instagram: "", // TODO e.g. https://instagram.com/ssquare.nadiad
+    instagram: "https://www.instagram.com/s_square_box_nadiad?psln=NndyNW92MGFhOWlo", // TODO e.g. https://instagram.com/ssquare.nadiad
     facebook: "",
     youtube: "",
   },

@@ -32,8 +32,8 @@ export const businessConfig = {
   dayParts: [
     { key: "night", from: 0, to: 6 },
     { key: "morning", from: 6, to: 12 },
-    { key: "afternoon", from: 12, to: 17 },
-    { key: "evening", from: 17, to: 24 },
+    { key: "afternoon", from: 12, to: 16 },
+    { key: "evening", from: 16, to: 24 },
   ],
 
   /** Weekend days for rate rules (0 = Sunday … 6 = Saturday). */
@@ -62,7 +62,7 @@ export const businessConfig = {
   expensePaymentMethods: ["cash", "upi", "card", "bank"] as const,
 
   /** UPI screenshots older than this are deleted automatically to save storage. */
-  screenshotRetentionDays: 180,
+  screenshotRetentionDays: 30,
 
   /** Screenshot compression before upload. */
   screenshot: { maxSizeMB: 0.08, maxWidthOrHeight: 1280 },

@@ -10,7 +10,8 @@ import { Card } from "@/components/ui/card";
 import { Input, Select } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
-import { useCourtName, useCourts, useRates } from "@/features/common/queries";
+import { COURTS } from "@/config/business";
+import { useCourtName, useRates } from "@/features/common/queries";
 import { parseAmount } from "@/lib/money";
 import type { DayType } from "@/lib/pricing";
 import { qk } from "@/lib/query-keys";
@@ -25,15 +26,14 @@ const TIME_OPTIONS = Array.from({ length: 1440 / STEP + 1 }, (_, i) => i * STEP)
 /** Owners edit ₹/hour per court and time window. Changes apply to new bookings and the website. */
 export function RatesSettings() {
   const t = useTranslations("staff.settings");
-  const { data: courts } = useCourts();
   const { data: rates, isLoading } = useRates();
-  if (isLoading || !courts) return <Spinner />;
+  if (isLoading) return <Spinner />;
   return (
     <section className="space-y-3">
       <h2 className="text-lg font-bold">{t("ratesTitle")}</h2>
       <p className="text-sm text-zinc-500">{t("ratesHelp")}</p>
-      {courts.map((c) => (
-        <CourtRates key={c.slug} court={c.slug} initial={(rates ?? []).filter((r) => r.court_slug === c.slug)} />
+      {COURTS.map((slug) => (
+        <CourtRates key={slug} court={slug} initial={(rates ?? []).filter((r) => r.court_slug === slug)} />
       ))}
     </section>
   );

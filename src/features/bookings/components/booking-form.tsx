@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Chips } from "@/components/ui/chips";
 import { Field, Input, Select, Textarea } from "@/components/ui/input";
 import { useToast } from "@/components/ui/toast";
-import { useCourtName, useCourts, useProfiles, useRates } from "@/features/common/queries";
+import { useCourtOptions, useProfiles, useRates } from "@/features/common/queries";
 import { useStaff } from "@/features/staff/context";
 import { formatINR, parseAmount } from "@/lib/money";
 import { computeTotal } from "@/lib/pricing";
@@ -42,10 +42,9 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   const me = useStaff();
   const toast = useToast();
   const qc = useQueryClient();
-  const { data: courts } = useCourts();
   const { data: rates } = useRates();
   const { data: profiles } = useProfiles();
-  const courtName = useCourtName();
+  const courtOptions = useCourtOptions();
 
   const owners = (profiles ?? []).filter((p) => p.role === "owner" && p.is_active);
   const activeStaff = (profiles ?? []).filter((p) => p.is_active);
@@ -168,7 +167,7 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
             name={t("court")}
             value={court}
             onChange={(v) => { setCourt(v); setSport(null); }}
-            options={(courts ?? []).map((c) => ({ value: c.slug, label: courtName(c.slug) }))}
+            options={courtOptions}
           />
         </Field>
         {COURT_SPORTS[court].length > 0 && (

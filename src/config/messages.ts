@@ -21,7 +21,7 @@ export type BookingMessageData = {
 const bookingTemplates: Record<Locale, (d: BookingMessageData) => string> = {
   en: (d) =>
     [
-      `*SSquare – Booking Confirmed* ✅`,
+      `*SSquare – Booking Confirmed* `,
       ``,
       `Booking ID: ${d.code}`,
       `Name: ${d.name}`,
@@ -35,11 +35,11 @@ const bookingTemplates: Record<Locale, (d: BookingMessageData) => string> = {
       `Booked By: ${d.bookedBy}`,
       ``,
       `Location: ${d.mapUrl}`,
-      `Thank you! See you at SSquare 🙏`,
+      `Thank you! See you at SSquare `,
     ].join("\n"),
   gu: (d) =>
     [
-      `*SSquare – બુકિંગ કન્ફર્મ* ✅`,
+      `*SSquare – બુકિંગ કન્ફર્મ*`,
       ``,
       `બુકિંગ ID: ${d.code}`,
       `નામ: ${d.name}`,
@@ -53,11 +53,11 @@ const bookingTemplates: Record<Locale, (d: BookingMessageData) => string> = {
       `બુક કરનાર: ${d.bookedBy}`,
       ``,
       `લોકેશન: ${d.mapUrl}`,
-      `આભાર! SSquare પર મળીએ 🙏`,
+      `આભાર! SSquare પર મળીએ`,
     ].join("\n"),
   hi: (d) =>
     [
-      `*SSquare – बुकिंग कन्फर्म* ✅`,
+      `*SSquare – बुकिंग कन्फर्म* `,
       ``,
       `बुकिंग ID: ${d.code}`,
       `नाम: ${d.name}`,
@@ -82,11 +82,11 @@ export function bookingMessage(locale: Locale, data: BookingMessageData) {
 /** Message a visitor sends from the public availability page. */
 const enquiryTemplates: Record<Locale, (court: string, date: string, time: string) => string> = {
   en: (court, date, time) =>
-    `Hello SSquare 🙏\nI would like to book the ${court} on ${date} from ${time}.\nPlease confirm if it is available.`,
+    `Hello SSquare \nI would like to book the ${court} on ${date} from ${time}.\nPlease confirm if it is available.`,
   gu: (court, date, time) =>
-    `નમસ્તે SSquare 🙏\nમારે ${date} ના રોજ ${time} થી ${court} બુક કરવું છે.\nકૃપા કરીને ઉપલબ્ધ છે કે નહીં તે જણાવશો.`,
+    `નમસ્તે SSquare \nમારે ${date} ના રોજ ${time} થી ${court} બુક કરવું છે.\nકૃપા કરીને ઉપલબ્ધ છે કે નહીં તે જણાવશો.`,
   hi: (court, date, time) =>
-    `नमस्ते SSquare 🙏\nमुझे ${date} को ${time} से ${court} बुक करना है।\nकृपया बताएं कि उपलब्ध है या नहीं।`,
+    `नमस्ते SSquare \nमुझे ${date} को ${time} से ${court} बुक करना है।\nकृपया बताएं कि उपलब्ध है या नहीं।`,
 };
 
 export function enquiryMessage(locale: Locale, court: string, date: string, time: string) {
@@ -96,15 +96,15 @@ export function enquiryMessage(locale: Locale, court: string, date: string, time
 /** Push notification text sent to owners. */
 export const pushTemplates = {
   completed: (by: string, name: string, upi: string, cash: string) => ({
-    title: `✅ ${by} completed a booking`,
+    title: `${by} completed a booking`,
     body: `${name} · UPI ${upi} · Cash ${cash}`,
   }),
   cancelled: (by: string, name: string, time: string) => ({
-    title: `❌ ${by} cancelled a booking`,
+    title: `${by} cancelled a booking`,
     body: `${name} · ${time}`,
   }),
   created: (by: string, name: string, time: string) => ({
-    title: `📅 New booking by ${by}`,
+    title: `New booking by ${by}`,
     body: `${name} · ${time}`,
   }),
 };

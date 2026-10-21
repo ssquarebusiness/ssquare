@@ -33,6 +33,10 @@
       "marketing": "Marketing",
       "rent": "Rent",
       "other": "Other"
+    },
+    "courts": {
+      "turf": "Turf (Cricket & Football)",
+      "pickleball": "Pickleball Court"
     }
   },
   "errors": {

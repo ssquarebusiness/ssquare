@@ -7,7 +7,8 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { initialRange, RangePicker } from "@/components/staff/range-picker";
 import { useRangeBookings, useRangePayments } from "@/features/bookings/queries";
-import { useCourtName, useCourts, useNameOf } from "@/features/common/queries";
+import { COURTS } from "@/config/business";
+import { useCourtName, useNameOf } from "@/features/common/queries";
 import { useExpenses } from "@/features/expenses/queries";
 import { formatINR } from "@/lib/money";
 import { formatDate, formatHour } from "@/lib/time";
@@ -23,12 +24,11 @@ export function AnalyticsView() {
   const bookings = useRangeBookings(range.from, range.to);
   const payments = useRangePayments(range.from, range.to);
   const expenses = useExpenses(range.from, range.to);
-  const { data: courts } = useCourts();
 
   const loading = bookings.isLoading || payments.isLoading || expenses.isLoading;
   const a = useMemo(
-    () => computeAnalytics(range, bookings.data ?? [], payments.data ?? [], expenses.data ?? [], (courts ?? []).map((c) => c.slug)),
-    [range, bookings.data, payments.data, expenses.data, courts],
+    () => computeAnalytics(range, bookings.data ?? [], payments.data ?? [], expenses.data ?? [], [...COURTS]),
+    [range, bookings.data, payments.data, expenses.data],
   );
 
   return (

@@ -12,7 +12,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { BookingCard } from "@/features/bookings/components/booking-card";
 import { BookingDetailSheet } from "@/features/bookings/components/booking-detail-sheet";
 import { useDayBookings, useMyCollection, useRangePayments } from "@/features/bookings/queries";
-import { useCourts, useCourtName, useNameOf } from "@/features/common/queries";
+import { useCourtOptions, useNameOf } from "@/features/common/queries";
 import { ExpenseSheet } from "@/features/expenses/components/expense-sheet";
 import { useExpenses } from "@/features/expenses/queries";
 import { formatINR, sum } from "@/lib/money";
@@ -142,8 +142,7 @@ function MyCollectionCard({ today }: { today: string }) {
 
 function TodayBookings({ today }: { today: string }) {
   const t = useTranslations("staff.home");
-  const courtName = useCourtName();
-  const { data: courts } = useCourts();
+  const courtOptions = useCourtOptions();
   const { data, isLoading } = useDayBookings(today);
   const [court, setCourt] = useState<string>("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -164,7 +163,7 @@ function TodayBookings({ today }: { today: string }) {
         <span className="text-sm text-zinc-500">{t("activeCount", { count: activeCount })}</span>
       </div>
       <Chips size="sm" name={t("todayBookings")} value={court} onChange={setCourt}
-        options={[{ value: "all", label: t("all") }, ...(courts ?? []).map((c) => ({ value: c.slug as string, label: courtName(c.slug) }))]} />
+        options={[{ value: "all", label: t("all") }, ...courtOptions]} />
       {isLoading ? (
         <div className="flex justify-center py-8"><Spinner /></div>
       ) : sorted.length === 0 ? (

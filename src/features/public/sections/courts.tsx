@@ -45,7 +45,7 @@ export async function Courts() {
                 ))}
               </ul>
               <div className="mt-6 flex flex-wrap gap-2">
-                <Link href="/availability" className={buttonClass("primary", "md")}>{t("courts.seeSlots")}</Link>
+                <Link href={{ pathname: "/availability", query: { court } }} className={buttonClass("primary", "md")}>{t("courts.seeSlots")}</Link>
                 <Link href={LANDING[court]} className={buttonClass("outline", "md")}>{t("courts.learnMore")}</Link>
               </div>
             </article>

@@ -10,7 +10,7 @@ import { Button, buttonClass } from "@/components/ui/button";
 import { Chips } from "@/components/ui/chips";
 import { Sheet } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/toast";
-import { useCourts, useNameOf } from "@/features/common/queries";
+import { useCourtName, useCourts, useNameOf } from "@/features/common/queries";
 import { formatINR } from "@/lib/money";
 import { formatDate, formatTimeRange } from "@/lib/time";
 import type { Booking } from "@/lib/types";
@@ -23,6 +23,7 @@ export function BookingConfirmation({ booking, advance, onClose }: { booking: Bo
   const toast = useToast();
   const nameOf = useNameOf();
   const { data: courts } = useCourts();
+  const courtName = useCourtName();
   const [msgLocale, setMsgLocale] = useState<Locale>(uiLocale);
   const [copied, setCopied] = useState(false);
 
@@ -34,7 +35,7 @@ export function BookingConfirmation({ booking, advance, onClose }: { booking: Bo
     phone: booking.customer_phone,
     date: formatDate(new Date(booking.start_at), msgLocale),
     time: formatTimeRange(booking.start_at, booking.end_at, msgLocale),
-    court: court?.name_i18n[msgLocale] ?? booking.court_slug,
+    court: court?.name_i18n[msgLocale] ?? courtName(booking.court_slug),
     sport: booking.sport ? tSports(booking.sport) : undefined,
     total: formatINR(booking.total_amount),
     advance: formatINR(advance),

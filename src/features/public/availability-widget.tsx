@@ -27,6 +27,19 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
   const [today, setToday] = useState(() => istDateStr());
   const [date, setDate] = useState<DateStr>(today);
   const [court, setCourt] = useState<CourtSlug>(fixedCourt ?? "turf");
+
+  // Open on the court named in the link (?court=pickleball), and keep the URL in sync so it can be shared.
+  useEffect(() => {
+    if (fixedCourt) return;
+    const fromUrl = new URLSearchParams(window.location.search).get("court");
+    if (fromUrl && (COURTS as readonly string[]).includes(fromUrl)) setCourt(fromUrl as CourtSlug);
+  }, [fixedCourt]);
+  const selectCourt = (c: CourtSlug) => {
+    setCourt(c);
+    const url = new URL(window.location.href);
+    url.searchParams.set("court", c);
+    window.history.replaceState(window.history.state, "", url);
+  };
   const [now, setNow] = useState(() => new Date());
   const [pick, setPick] = useState<{ minute: number; until: number } | null>(null);
   const { data, error, loading, retry } = useAvailability(date);
@@ -71,7 +84,7 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
       {!fixedCourt && (
         <div role="tablist" aria-label={t("title")} className="grid grid-cols-2 gap-1 rounded-2xl bg-zinc-100 p-1">
           {COURTS.map((c) => (
-            <button key={c} role="tab" aria-selected={court === c} onClick={() => setCourt(c)}
+            <button key={c} role="tab" aria-selected={court === c} onClick={() => selectCourt(c)}
               className={cn("rounded-xl px-3 py-3 text-[15px] font-semibold transition",
                 court === c ? "bg-white text-brand-900 shadow" : "text-zinc-600")}>
               {courtNames[c]}

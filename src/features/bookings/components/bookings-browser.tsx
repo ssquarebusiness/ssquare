@@ -11,7 +11,7 @@ import { Empty } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useCan } from "@/features/staff/context";
-import { useCourts, useCourtName } from "@/features/common/queries";
+import { useCourtOptions } from "@/features/common/queries";
 import { formatINR, sum } from "@/lib/money";
 import { getSupabase } from "@/lib/supabase/client";
 import { addDays, formatDate, istDateStr, type DateStr } from "@/lib/time";
@@ -26,8 +26,7 @@ export function BookingsBrowser({ initialDate }: { initialDate: DateStr }) {
   const ts = useTranslations("common.status");
   const locale = useLocale() as Locale;
   const can = useCan();
-  const courtName = useCourtName();
-  const { data: courts } = useCourts();
+  const courtOptions = useCourtOptions();
   const [date, setDate] = useState(initialDate);
   const [status, setStatus] = useState<BookingStatus | "all">("all");
   const [court, setCourt] = useState("all");
@@ -96,7 +95,7 @@ export function BookingsBrowser({ initialDate }: { initialDate: DateStr }) {
         <Chips size="sm" name={t("status")} value={status} onChange={setStatus}
           options={[{ value: "all" as const, label: t("all") }, ...(["confirmed", "completed", "cancelled"] as const).map((s) => ({ value: s, label: ts(s) }))]} />
         <Chips size="sm" name={t("court")} value={court} onChange={setCourt}
-          options={[{ value: "all", label: t("allCourts") }, ...(courts ?? []).map((c) => ({ value: c.slug as string, label: courtName(c.slug) }))]} />
+          options={[{ value: "all", label: t("allCourts") }, ...courtOptions]} />
       </div>
 
       {!searching && active.length > 0 && (
