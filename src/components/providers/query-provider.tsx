@@ -1,14 +1,20 @@
 "use client";
-import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider, type Persister } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { del, get, set } from "idb-keyval";
+import { Logo } from "@/components/logo";
+import { Spinner } from "@/components/ui/spinner";
 
 /**
  * Data cache saved on the phone (IndexedDB) so the installed app opens instantly
  * and still shows the last data when the network is weak.
- * On the server there is no IndexedDB, so a plain provider renders the same markup.
+ *
+ * The staff app is rendered in the browser only: the server and the browser's first
+ * render both show the same loading screen, then the app appears with the saved data.
+ * (Rendering it on the server would show "loading" while the browser already has
+ * cached data — a hydration mismatch.)
  */
 export function QueryProvider({ children, userId }: { children: React.ReactNode; userId?: string }) {
   const [client] = useState(
@@ -26,17 +32,19 @@ export function QueryProvider({ children, userId }: { children: React.ReactNode;
         },
       }),
   );
-  const [persister] = useState<Persister | undefined>(() =>
-    typeof window === "undefined"
-      ? undefined
-      : createAsyncStoragePersister({
-          storage: { getItem: get, setItem: set, removeItem: del },
-          key: "ssquare-cache",
-          throttleTime: 1000,
-        }),
-  );
+  const [persister, setPersister] = useState<Persister | null>(null);
 
-  if (!persister) return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+  useEffect(() => {
+    setPersister(
+      createAsyncStoragePersister({
+        storage: { getItem: get, setItem: set, removeItem: del },
+        key: "ssquare-cache",
+        throttleTime: 1000,
+      }),
+    );
+  }, []);
+
+  if (!persister) return <AppLoading />;
   return (
     <PersistQueryClientProvider
       client={client}
@@ -44,5 +52,14 @@ export function QueryProvider({ children, userId }: { children: React.ReactNode;
     >
       {children}
     </PersistQueryClientProvider>
+  );
+}
+
+function AppLoading() {
+  return (
+    <div className="flex min-h-dvh flex-col items-center justify-center gap-4 bg-canvas text-zinc-400" aria-busy="true">
+      <Logo priority className="h-14 w-14 rounded-2xl" />
+      <Spinner className="size-5" />
+    </div>
   );
 }

@@ -14,6 +14,7 @@ import { WhatsAppIcon } from "@/features/bookings/components/booking-confirmatio
 import { bookedMinutesOfDay, buildHourRows, dayPartOf, freeUntil, groupByDayPart, type HourRow } from "@/lib/slots";
 import { addDays, formatDate, formatHour, formatMinutes, istDateStr, istMinutesOfDay, type DateStr } from "@/lib/time";
 import { cn, telHref, whatsappHref } from "@/lib/utils";
+import { useMounted } from "@/lib/use-mounted";
 import { useAvailability } from "./use-availability";
 
 /**
@@ -23,6 +24,7 @@ import { useAvailability } from "./use-availability";
 export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Record<CourtSlug, string>; fixedCourt?: CourtSlug }) {
   const t = useTranslations("public.availability");
   const locale = useLocale() as Locale;
+  const mounted = useMounted();
   const [today, setToday] = useState(() => istDateStr());
   const [date, setDate] = useState<DateStr>(today);
   const [court, setCourt] = useState<CourtSlug>(fixedCourt ?? "turf");
@@ -77,6 +79,15 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
   const message = pick
     ? enquiryMessage(locale, courtNames[court], formatDate(date, locale, { weekday: "long", day: "numeric", month: "long" }), formatMinutes(pick.minute, locale))
     : "";
+
+  // "Today" and past hours depend on the visitor's clock (the page HTML may be cached), so render in the browser only.
+  if (!mounted) {
+    return (
+      <div className="flex min-h-80 items-center justify-center gap-2 rounded-[22px] border border-line bg-white text-zinc-500 shadow-card">
+        <Spinner /> {t("loading")}
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-[22px] border border-line bg-white p-4 shadow-card sm:p-5">
