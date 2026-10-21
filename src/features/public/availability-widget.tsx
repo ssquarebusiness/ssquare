@@ -7,6 +7,7 @@ import { enquiryMessage } from "@/config/messages";
 import { siteConfig } from "@/config/site";
 import type { Locale } from "@/i18n/routing";
 import { buttonClass } from "@/components/ui/button";
+import { DatePickerButton } from "@/components/ui/date-picker-button";
 import { Sheet } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
 import { WhatsAppIcon } from "@/features/bookings/components/booking-confirmation";
@@ -103,13 +104,26 @@ export function AvailabilityWidget({ courtNames, fixedCourt }: { courtNames: Rec
             <span className="text-[11px] opacity-80">{formatDate(d, locale, { month: "short" })}</span>
           </button>
         ))}
-        <label className="relative flex min-w-[4.5rem] shrink-0 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white px-3 py-2 text-zinc-600">
+        <DatePickerButton
+          value={date}
+          min={today}
+          max={maxDate}
+          onChange={setDate}
+          label={t("pickDate")}
+          className={cn(
+            "flex h-full min-w-[4.5rem] shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl border px-3 py-2",
+            days.includes(date)
+              ? "border-dashed border-zinc-300 bg-white text-zinc-600"
+              : "border-brand-700 bg-brand-700 text-white",
+          )}
+        >
           <CalendarDays className="size-5" />
-          <span className="text-[11px] font-medium">{t("pickDate")}</span>
-          <input type="date" min={today} max={maxDate} value={date}
-            onChange={(e) => e.target.value && setDate(e.target.value)}
-            className="absolute inset-0 cursor-pointer opacity-0" aria-label={t("pickDate")} />
-        </label>
+          {days.includes(date) ? (
+            <span className="text-[11px] font-medium">{t("pickDate")}</span>
+          ) : (
+            <span className="text-xs font-bold">{formatDate(date, locale, { day: "numeric", month: "short" })}</span>
+          )}
+        </DatePickerButton>
       </div>
 
       {!days.includes(date) && (
@@ -217,15 +231,15 @@ function HourRowView({ row, onChoose }: { row: HourRow; onChoose: () => void }) 
   return (
     <li>
       <button onClick={onChoose} disabled={!clickable}
-        className={cn("flex w-full items-center gap-3 px-4 py-2.5 text-left", clickable ? "active:bg-brand-50" : "cursor-default")}>
-        <span className="w-14 shrink-0 text-sm font-semibold text-zinc-700">{formatHour(row.hour, locale)}</span>
-        <span className="relative h-7 flex-1 overflow-hidden rounded-lg bg-free/85" aria-hidden>
+        className={cn("flex min-h-12 w-full items-center gap-2 px-3 py-2 text-left sm:gap-3 sm:px-4", clickable ? "active:bg-brand-50" : "cursor-default")}>
+        <span className="w-11 shrink-0 text-[13px] font-semibold text-zinc-700 sm:w-14 sm:text-sm">{formatHour(row.hour, locale)}</span>
+        <span className="relative h-7 min-w-0 flex-1 overflow-hidden rounded-lg bg-free/85" aria-hidden>
           {row.pastMinutes > 0 && <span className="absolute inset-y-0 left-0 bg-past" style={{ width: pct(row.pastMinutes) }} />}
           {row.booked.map((b) => (
             <span key={b.from} className="absolute inset-y-0 bg-booked" style={{ left: pct(b.from), width: pct(b.to - b.from) }} />
           ))}
         </span>
-        <span className={cn("w-28 shrink-0 text-right text-sm font-medium",
+        <span className={cn("w-[5.75rem] shrink-0 text-right text-xs leading-tight font-medium sm:w-32 sm:text-sm",
           row.status === "free" ? "text-free" : row.status === "booked" ? "text-booked" : row.status === "past" ? "text-zinc-400" : "text-amber-700")}>
           {label}
         </span>

@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/routing";
 import { buttonClass } from "@/components/ui/button";
 import { Chips } from "@/components/ui/chips";
 import { Empty } from "@/components/ui/empty";
+import { DatePickerButton } from "@/components/ui/date-picker-button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useCan } from "@/features/staff/context";
@@ -78,13 +79,12 @@ export function BookingsBrowser({ initialDate }: { initialDate: DateStr }) {
           <button onClick={() => setDate(addDays(date, -1))} aria-label={t("prevDay")} className={buttonClass("outline", "icon")}>
             <ChevronLeft className="size-5" />
           </button>
-          <label className="relative flex-1">
-            <span className="block rounded-xl border border-zinc-300 bg-white py-2.5 text-center font-semibold">
+          <div className="flex-1 [&>span]:flex [&>span]:w-full">
+            <DatePickerButton value={date} onChange={setDate} label={t("pickDate")}
+              className="w-full rounded-xl border border-zinc-300 bg-white py-2.5 text-center font-semibold">
               {date === istDateStr() ? `${t("today")} · ` : ""}{formatDate(date, locale)}
-            </span>
-            <input type="date" value={date} onChange={(e) => e.target.value && setDate(e.target.value)}
-              className="absolute inset-0 opacity-0" aria-label={t("pickDate")} />
-          </label>
+            </DatePickerButton>
+          </div>
           <button onClick={() => setDate(addDays(date, 1))} aria-label={t("nextDay")} className={buttonClass("outline", "icon")}>
             <ChevronRight className="size-5" />
           </button>

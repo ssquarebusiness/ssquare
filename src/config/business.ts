@@ -31,6 +31,12 @@ export const businessConfig = {
   /** How far ahead the public can check availability (days). */
   publicAvailabilityDaysAhead: 90,
 
+  /**
+   * Staff "today" runs until this hour of the NEXT morning, so late-night bookings
+   * (12 AM – 6 AM) show in today's list. Keep in sync with the SQL function overlaps_today().
+   */
+  todayExtendsToHour: 6,
+
   /** Number of days shown in the quick date strip. */
   dateStripDays: 7,
 

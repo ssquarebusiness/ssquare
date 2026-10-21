@@ -11,7 +11,7 @@ import { Empty } from "@/components/ui/empty";
 import { Spinner } from "@/components/ui/spinner";
 import { BookingCard } from "@/features/bookings/components/booking-card";
 import { BookingDetailSheet } from "@/features/bookings/components/booking-detail-sheet";
-import { useDayBookings, useMyCollection, useRangePayments } from "@/features/bookings/queries";
+import { useMyCollection, useRangePayments, useTodayBookings } from "@/features/bookings/queries";
 import { useCourtOptions, useNameOf } from "@/features/common/queries";
 import { ExpenseSheet } from "@/features/expenses/components/expense-sheet";
 import { useExpenses } from "@/features/expenses/queries";
@@ -64,7 +64,7 @@ function OwnerCards({ today }: { today: string }) {
   const t = useTranslations("staff.home");
   const nameOf = useNameOf();
   const { data: payments, isLoading } = useRangePayments(today, today);
-  const { data: bookings } = useDayBookings(today);
+  const { data: bookings } = useTodayBookings(today);
   const { data: expenses } = useExpenses(today, today);
 
   const split = useMemo(() => splitPayments(payments ?? []), [payments]);
@@ -142,8 +142,9 @@ function MyCollectionCard({ today }: { today: string }) {
 
 function TodayBookings({ today }: { today: string }) {
   const t = useTranslations("staff.home");
+  const locale = useLocale() as Locale;
   const courtOptions = useCourtOptions();
-  const { data, isLoading } = useDayBookings(today);
+  const { data, isLoading } = useTodayBookings(today);
   const [court, setCourt] = useState<string>("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -171,7 +172,10 @@ function TodayBookings({ today }: { today: string }) {
       ) : (
         <ul className="space-y-2">
           {sorted.map((b) => (
-            <li key={b.id}><BookingCard booking={b} onOpen={() => setSelectedId(b.id)} /></li>
+            <li key={b.id}>
+              <BookingCard booking={b} onOpen={() => setSelectedId(b.id)}
+                showDate={istDateStr(new Date(b.start_at)) > today ? t("lateNight", { date: formatDate(new Date(b.start_at), locale, { weekday: "short", day: "numeric" }) }) : undefined} />
+            </li>
           ))}
         </ul>
       )}

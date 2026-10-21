@@ -2,7 +2,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSupabase } from "@/lib/supabase/client";
 import { qk } from "@/lib/query-keys";
-import { istDateRange, istDayRange, type DateStr } from "@/lib/time";
+import { businessConfig } from "@/config/business";
+import { addDays, atIST, istDateRange, istDayRange, istStartOfDay, type DateStr } from "@/lib/time";
 import type { BookingSummary, Payment } from "@/lib/types";
 import type { PaymentMethod } from "@/config/business";
 
@@ -13,6 +14,27 @@ export function useDayBookings(date: DateStr, opts: { enabled?: boolean } = {}) 
     enabled: opts.enabled ?? true,
     queryFn: async () => {
       const { start, end } = istDayRange(date);
+      const { data, error } = await getSupabase()
+        .from("booking_summary")
+        .select("*")
+        .lt("start_at", end.toISOString())
+        .gt("end_at", start.toISOString())
+        .order("start_at");
+      if (error) throw error;
+      return data as BookingSummary[];
+    },
+  });
+}
+
+/**
+ * Staff "today": bookings from 12 AM today until 6 AM tomorrow (late-night games belong to tonight).
+ */
+export function useTodayBookings(today: DateStr) {
+  return useQuery({
+    queryKey: [...qk.bookingsDay(today), "with-late-night"],
+    queryFn: async () => {
+      const start = istStartOfDay(today);
+      const end = atIST(addDays(today, 1), businessConfig.todayExtendsToHour * 60);
       const { data, error } = await getSupabase()
         .from("booking_summary")
         .select("*")

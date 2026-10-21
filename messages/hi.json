@@ -137,7 +137,8 @@
       "todayBookings": "आज की बुकिंग",
       "activeCount": "{count, plural, =0 {कोई बाकी नहीं} one {# बाकी} other {# बाकी}}",
       "all": "सभी",
-      "noBookings": "आज कोई बुकिंग नहीं"
+      "noBookings": "आज कोई बुकिंग नहीं",
+      "lateNight": "देर रात ({date})"
     },
     "booking": {
       "toCollect": "लेने हैं",
@@ -252,9 +253,7 @@
       "language": "मैसेज की भाषा",
       "copy": "कॉपी",
       "copied": "मैसेज कॉपी हुआ",
-      "whatsapp": "WhatsApp",
-      "otherContact": "किसी और कॉन्टैक्ट को भेजें",
-      "done": "हो गया"
+      "whatsapp": "WhatsApp"
     },
     "bookings": {
       "title": "बुकिंग",

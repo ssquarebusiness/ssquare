@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { RotateCcw, UserCheck } from "lucide-react";
 import { businessConfig, COURT_SPORTS, type CourtSlug, type PaymentMethod } from "@/config/business";
@@ -41,6 +42,7 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   const locale = useLocale() as Locale;
   const me = useStaff();
   const toast = useToast();
+  const router = useRouter();
   const qc = useQueryClient();
   const { data: rates } = useRates();
   const { data: profiles } = useProfiles();
@@ -300,10 +302,7 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
         <BookingConfirmation
           booking={created}
           advance={advanceAmount}
-          onClose={() => {
-            setCreated(null);
-            setName(""); setPhone(""); setEmail(""); setAdvance("0"); setNotes(""); setTotalInput(null); setRepeat(false);
-          }}
+          onClose={() => router.push("/staff")}
         />
       )}
     </div>

@@ -38,10 +38,16 @@ select public.create_booking('pickleball', null, 'Pickle', '9876543213', null,
   public.ist_day_start(public.ist_today()) + interval '19 hours',
   public.ist_day_start(public.ist_today()) + interval '20 hours', 400, null, 0, null, null, null);
 
+-- Late-night booking (tomorrow 1–2 AM) belongs to today's list.
+select public.create_booking('turf', 'cricket', 'Night Owl', '9876543216', null,
+  public.ist_day_start(public.ist_today() + 1) + interval '1 hour',
+  public.ist_day_start(public.ist_today() + 1) + interval '2 hours', 1000, null, 0, null, null, null);
+
 -- ---- Caretaker: sees only today's bookings, no expenses, cannot create ----
 select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000003', true);
 do $$ begin
-  if (select count(*) from public.bookings) <> 2 then raise exception 'FAIL: caretaker sees % bookings', (select count(*) from public.bookings); end if;
+  -- today 7 PM turf + today 7 PM pickleball + tomorrow 1 AM (late night). Tomorrow 7 AM stays hidden.
+  if (select count(*) from public.bookings) <> 3 then raise exception 'FAIL: caretaker sees % bookings', (select count(*) from public.bookings); end if;
   if (select count(*) from public.payments) <> 1 then raise exception 'FAIL: caretaker payments'; end if;
   raise notice 'ok: caretaker sees only today';
 end $$;

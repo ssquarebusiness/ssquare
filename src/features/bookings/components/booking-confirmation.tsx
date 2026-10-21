@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import Link from "next/link";
-import { Check, Copy, Send } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { bookingMessage, unknownCustomerText } from "@/config/messages";
 import { siteConfig } from "@/config/site";
 import { locales, localeNames, type Locale } from "@/i18n/routing";
@@ -17,7 +16,7 @@ import type { Booking } from "@/lib/types";
 import { whatsappHref } from "@/lib/utils";
 import { customerLabel, phoneLabel } from "@/lib/customer";
 
-/** Popup shown after saving a booking: full details + Copy + WhatsApp share. */
+/** Popup shown after saving a booking: full details + Copy + WhatsApp share. Closing it goes back home. */
 export function BookingConfirmation({ booking, advance, onClose }: { booking: Booking; advance: number; onClose: () => void }) {
   const t = useTranslations("staff.confirmation");
   const uiLocale = useLocale() as Locale;
@@ -68,25 +67,14 @@ export function BookingConfirmation({ booking, advance, onClose }: { booking: Bo
       onClose={onClose}
       title={<span className="flex items-center gap-2 text-brand-800"><Check className="size-6 rounded-full bg-brand-100 p-1" /> {t("title")}</span>}
       footer={
-        <div className="space-y-2 pb-1">
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" size="lg" onClick={copy}>
-              {copied ? <Check className="size-5" /> : <Copy className="size-5" />} {t("copy")}
-            </Button>
-            {/* With a phone number → straight to the customer's chat; without → WhatsApp asks for a contact. */}
-            <a href={whatsappHref(message, booking.customer_phone ?? undefined)} target="_blank" rel="noopener noreferrer"
-              className={buttonClass("whatsapp", "lg")}>
-              <WhatsAppIcon /> {t("whatsapp")}
-            </a>
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            {booking.customer_phone ? (
-              <a href={whatsappHref(message)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-brand-700">
-                <Send className="size-4" /> {t("otherContact")}
-              </a>
-            ) : <span />}
-            <Link href="/staff" className="font-semibold text-zinc-600" onClick={onClose}>{t("done")}</Link>
-          </div>
+        <div className="grid grid-cols-2 gap-2 pb-1">
+          <Button variant="outline" size="lg" onClick={copy}>
+            {copied ? <Check className="size-5" /> : <Copy className="size-5" />} {t("copy")}
+          </Button>
+          {/* Opens WhatsApp's contact picker — send to the customer, yourself or anyone. */}
+          <a href={whatsappHref(message)} target="_blank" rel="noopener noreferrer" className={buttonClass("whatsapp", "lg")}>
+            <WhatsAppIcon /> {t("whatsapp")}
+          </a>
         </div>
       }
     >

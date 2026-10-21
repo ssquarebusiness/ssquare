@@ -137,7 +137,8 @@
       "todayBookings": "Today's bookings",
       "activeCount": "{count, plural, =0 {None pending} one {# pending} other {# pending}}",
       "all": "All",
-      "noBookings": "No bookings today"
+      "noBookings": "No bookings today",
+      "lateNight": "Late night ({date})"
     },
     "booking": {
       "toCollect": "To collect",
@@ -252,9 +253,7 @@
       "language": "Message language",
       "copy": "Copy",
       "copied": "Message copied",
-      "whatsapp": "WhatsApp",
-      "otherContact": "Send to another contact",
-      "done": "Done"
+      "whatsapp": "WhatsApp"
     },
     "bookings": {
       "title": "Bookings",

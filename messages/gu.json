@@ -137,7 +137,8 @@
       "todayBookings": "આજના બુકિંગ",
       "activeCount": "{count, plural, =0 {કોઈ બાકી નથી} one {# બાકી} other {# બાકી}}",
       "all": "બધા",
-      "noBookings": "આજે કોઈ બુકિંગ નથી"
+      "noBookings": "આજે કોઈ બુકિંગ નથી",
+      "lateNight": "મોડી રાત ({date})"
     },
     "booking": {
       "toCollect": "લેવાના",
@@ -252,9 +253,7 @@
       "language": "મેસેજની ભાષા",
       "copy": "કૉપિ",
       "copied": "મેસેજ કૉપિ થયો",
-      "whatsapp": "WhatsApp",
-      "otherContact": "બીજા કોન્ટેક્ટને મોકલો",
-      "done": "થઈ ગયું"
+      "whatsapp": "WhatsApp"
     },
     "bookings": {
       "title": "બુકિંગ",
