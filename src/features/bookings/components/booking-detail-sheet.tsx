@@ -11,7 +11,7 @@ import { Field, Input } from "@/components/ui/input";
 import { Sheet } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
-import { useCourtName, useNameOf } from "@/features/common/queries";
+import { useCourtName, useCustomerLabels, useNameOf } from "@/features/common/queries";
 import { useIsOwner } from "@/features/staff/context";
 import { formatINR, parseAmount } from "@/lib/money";
 import { qk } from "@/lib/query-keys";
@@ -30,6 +30,7 @@ type Mode = "view" | "complete" | "cancel";
 export function BookingDetailSheet({ booking, onClose }: { booking: BookingSummary | null; onClose: () => void }) {
   const [mode, setMode] = useState<Mode>("view");
   const t = useTranslations("staff.booking");
+  const customer = useCustomerLabels();
   const close = () => {
     setMode("view");
     onClose();
@@ -37,7 +38,7 @@ export function BookingDetailSheet({ booking, onClose }: { booking: BookingSumma
   if (!booking) return null;
 
   const title =
-    mode === "complete" ? t("completeTitle") : mode === "cancel" ? t("cancelTitle") : booking.customer_name;
+    mode === "complete" ? t("completeTitle") : mode === "cancel" ? t("cancelTitle") : customer.name(booking.customer_name);
 
   return (
     <Sheet open onClose={close} title={title}>
@@ -58,6 +59,7 @@ function Row({ label, children, strong }: { label: string; children: React.React
 }
 
 function DetailView({ booking: b, onMode }: { booking: BookingSummary; onMode: (m: Mode) => void }) {
+  const customer = useCustomerLabels();
   const t = useTranslations("staff.booking");
   const tc = useTranslations("common");
   const locale = useLocale() as Locale;
@@ -74,14 +76,20 @@ function DetailView({ booking: b, onMode }: { booking: BookingSummary; onMode: (
         <StatusBadge status={b.status} />
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <a href={telHref(b.customer_phone)} className={buttonClass("outline", "md")}>
-          <Phone className="size-4" /> {b.customer_phone}
-        </a>
-        <a href={whatsappHref("", b.customer_phone)} target="_blank" rel="noopener noreferrer" className={buttonClass("outline", "md")}>
-          <WhatsAppIcon className="size-4 text-[#25D366]" /> WhatsApp
-        </a>
-      </div>
+      {b.customer_phone ? (
+        <div className="grid grid-cols-2 gap-2">
+          <a href={telHref(b.customer_phone)} className={buttonClass("outline", "md")}>
+            <Phone className="size-4" /> {b.customer_phone}
+          </a>
+          <a href={whatsappHref("", b.customer_phone)} target="_blank" rel="noopener noreferrer" className={buttonClass("outline", "md")}>
+            <WhatsAppIcon className="size-4 text-[#25D366]" /> WhatsApp
+          </a>
+        </div>
+      ) : (
+        <p className="flex items-center gap-2 rounded-xl bg-zinc-50 px-3 py-2.5 text-sm text-zinc-500">
+          <Phone className="size-4" /> {customer.phone(null)}
+        </p>
+      )}
 
       <div className="divide-y divide-zinc-100 rounded-2xl bg-zinc-50 px-4 text-[15px]">
         <Row label={t("court")}>{courtName(b.court_slug)}{b.sport ? ` · ${tc(`sports.${b.sport}`)}` : ""}</Row>
@@ -179,6 +187,7 @@ function PaymentRow({ payment: p, showReceiver }: { payment: Payment; showReceiv
 }
 
 function CompleteForm({ booking: b, onBack, onDone }: { booking: BookingSummary; onBack: () => void; onDone: () => void }) {
+  const customer = useCustomerLabels();
   const t = useTranslations("staff.complete");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
@@ -237,7 +246,7 @@ function CompleteForm({ booking: b, onBack, onDone }: { booking: BookingSummary;
   return (
     <div className="space-y-5">
       <div className="rounded-2xl bg-zinc-50 p-4">
-        <p className="font-semibold">{b.customer_name}</p>
+        <p className="font-semibold">{customer.name(b.customer_name)}</p>
         <div className="mt-2 flex justify-between text-[15px]"><span className="text-zinc-500">{t("remaining")}</span><span className="font-bold">{formatINR(b.remaining_amount)}</span></div>
       </div>
 
@@ -307,6 +316,7 @@ function CompleteForm({ booking: b, onBack, onDone }: { booking: BookingSummary;
 }
 
 function CancelForm({ booking: b, onBack, onDone }: { booking: BookingSummary; onBack: () => void; onDone: () => void }) {
+  const customer = useCustomerLabels();
   const t = useTranslations("staff.cancel");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
@@ -337,7 +347,7 @@ function CancelForm({ booking: b, onBack, onDone }: { booking: BookingSummary; o
 
   return (
     <div className="space-y-5">
-      <p className="text-zinc-700">{t("question", { name: b.customer_name })}</p>
+      <p className="text-zinc-700">{t("question", { name: customer.name(b.customer_name) })}</p>
       <Field label={t("reason")}>
         <Chips size="sm" name={t("reason")} value={reason} onChange={setReason}
           options={reasons.map((r) => ({ value: r, label: t(`reasons.${r}`) }))} />

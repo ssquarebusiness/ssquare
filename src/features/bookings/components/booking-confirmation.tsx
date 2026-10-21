@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { Check, Copy, Send } from "lucide-react";
-import { bookingMessage } from "@/config/messages";
+import { bookingMessage, unknownCustomerText } from "@/config/messages";
 import { siteConfig } from "@/config/site";
 import { locales, localeNames, type Locale } from "@/i18n/routing";
 import { Button, buttonClass } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import { formatINR } from "@/lib/money";
 import { formatDate, formatTimeRange } from "@/lib/time";
 import type { Booking } from "@/lib/types";
 import { whatsappHref } from "@/lib/utils";
+import { customerLabel, phoneLabel } from "@/lib/customer";
 
 /** Popup shown after saving a booking: full details + Copy + WhatsApp share. */
 export function BookingConfirmation({ booking, advance, onClose }: { booking: Booking; advance: number; onClose: () => void }) {
@@ -31,8 +32,8 @@ export function BookingConfirmation({ booking, advance, onClose }: { booking: Bo
   const tSports = useTranslations("common.sports");
   const message = bookingMessage(msgLocale, {
     code: booking.code,
-    name: booking.customer_name,
-    phone: booking.customer_phone,
+    name: customerLabel(booking.customer_name, unknownCustomerText[msgLocale].name),
+    phone: phoneLabel(booking.customer_phone, unknownCustomerText[msgLocale].phone),
     date: formatDate(new Date(booking.start_at), msgLocale),
     time: formatTimeRange(booking.start_at, booking.end_at, msgLocale),
     court: court?.name_i18n[msgLocale] ?? courtName(booking.court_slug),
@@ -72,15 +73,18 @@ export function BookingConfirmation({ booking, advance, onClose }: { booking: Bo
             <Button variant="outline" size="lg" onClick={copy}>
               {copied ? <Check className="size-5" /> : <Copy className="size-5" />} {t("copy")}
             </Button>
-            <a href={whatsappHref(message, booking.customer_phone)} target="_blank" rel="noopener noreferrer"
+            {/* With a phone number → straight to the customer's chat; without → WhatsApp asks for a contact. */}
+            <a href={whatsappHref(message, booking.customer_phone ?? undefined)} target="_blank" rel="noopener noreferrer"
               className={buttonClass("whatsapp", "lg")}>
               <WhatsAppIcon /> {t("whatsapp")}
             </a>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <a href={whatsappHref(message)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-brand-700">
-              <Send className="size-4" /> {t("otherContact")}
-            </a>
+            {booking.customer_phone ? (
+              <a href={whatsappHref(message)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-brand-700">
+                <Send className="size-4" /> {t("otherContact")}
+              </a>
+            ) : <span />}
             <Link href="/staff" className="font-semibold text-zinc-600" onClick={onClose}>{t("done")}</Link>
           </div>
         </div>

@@ -98,11 +98,31 @@ do $$ begin
   raise notice 'ok: owner collection_summary';
 end $$;
 
+-- ---- Optional customer name / phone ----
+do $$ declare b public.bookings; begin
+  b := public.create_booking('pickleball', 'pickleball', '  ', '', null,
+    public.ist_day_start(public.ist_today() + 3) + interval '6 hours',
+    public.ist_day_start(public.ist_today() + 3) + interval '7 hours', 400, null, 0, null, null, null);
+  if b.customer_name is not null or b.customer_phone is not null then raise exception 'FAIL: blank customer not stored as null'; end if;
+  raise notice 'ok: booking without customer name / phone';
+end $$;
+
+-- ---- Sport rates: owners can change, caretakers cannot ----
+update public.sport_rates set weekday_price = 900 where sport = 'cricket';
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000003', true);
+update public.sport_rates set weekday_price = 1 where sport = 'cricket';
+select set_config('request.jwt.claim.sub', '00000000-0000-0000-0000-000000000001', true);
+do $$ begin
+  if (select weekday_price from public.sport_rates where sport = 'cricket') <> 900 then raise exception 'FAIL: rate edit rules'; end if;
+  raise notice 'ok: only owners change rates';
+end $$;
+
 -- ---- Anonymous visitor ----
 reset role; set local role anon;
 do $$ begin
   if (select count(*) from public.get_public_availability((now() at time zone 'Asia/Kolkata')::date)) <> 2 then raise exception 'FAIL: public availability'; end if;
-  if (select count(*) from public.rate_rules) = 0 then raise exception 'FAIL: rates hidden'; end if;
+  if (select count(*) from public.sport_rates) <> 3 then raise exception 'FAIL: sport rates hidden'; end if;
+  if (select count(*) from public.courts) <> 2 then raise exception 'FAIL: courts missing'; end if;
   raise notice 'ok: public availability + rates';
 end $$;
 do $$ begin

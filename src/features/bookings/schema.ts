@@ -5,8 +5,9 @@ export const createBookingSchema = z
   .object({
     court: z.enum(COURTS),
     sport: z.string().max(30).optional().nullable(),
-    name: z.string().trim().min(1).max(100),
-    phone: z.string().regex(/^[0-9]{10}$/),
+    // Customer details are optional; blanks are saved empty and shown as "Unknown".
+    name: z.string().trim().max(100).optional(),
+    phone: z.union([z.literal(""), z.string().regex(/^[0-9]{10}$/)]).optional(),
     email: z.union([z.literal(""), z.email()]).optional(),
     startAt: z.iso.datetime({ offset: true }),
     endAt: z.iso.datetime({ offset: true }),

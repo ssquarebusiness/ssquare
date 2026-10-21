@@ -75,6 +75,13 @@ const bookingTemplates: Record<Locale, (d: BookingMessageData) => string> = {
     ].join("\n"),
 };
 
+/** Shown in messages when the customer's name / phone was not given. */
+export const unknownCustomerText: Record<Locale, { name: string; phone: string }> = {
+  en: { name: "Unknown customer", phone: "Not given" },
+  gu: { name: "અજાણ્યા ગ્રાહક", phone: "આપેલ નથી" },
+  hi: { name: "अज्ञात ग्राहक", phone: "नहीं दिया" },
+};
+
 export function bookingMessage(locale: Locale, data: BookingMessageData) {
   return bookingTemplates[locale](data);
 }

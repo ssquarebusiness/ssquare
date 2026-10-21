@@ -117,6 +117,6 @@ export async function findCustomerByPhone(phone: string) {
     .eq("customer_phone", phone)
     .order("created_at", { ascending: false })
     .limit(1)
-    .maybeSingle<{ customer_name: string; customer_email: string | null }>();
+    .maybeSingle<{ customer_name: string | null; customer_email: string | null }>();
   return data;
 }

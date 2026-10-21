@@ -1,51 +1,34 @@
 /**
- * Auto-calculates a booking's total from the rate rules owners set in Settings → Rates.
- * A rule covers a time window (can cross midnight, e.g. 6 PM → 6 AM) on weekdays,
- * weekends or all days. Weekday/weekend rules win over "all" rules.
+ * Auto-calculates a booking's total from the per-sport prices owners set in Settings → Rates:
+ * one price per hour for weekdays (Mon–Fri) and one for weekends (Sat–Sun).
+ * A booking that runs past midnight into a different kind of day is charged by each part.
  */
 import { businessConfig } from "@/config/business";
-import { istMinutesOfDay, istWeekday } from "./time";
+import { istWeekday } from "./time";
 
-export type DayType = "all" | "weekday" | "weekend";
-
-export type RateRule = {
+export type SportRate = {
+  sport: string;
   court_slug: string;
-  day_type: DayType;
-  start_minute: number; // 0–1439
-  end_minute: number; // 1–1440; smaller than start = crosses midnight; equal = all day
-  price_per_hour: number;
+  weekday_price: number;
+  weekend_price: number;
+  sort?: number;
 };
 
 export function isWeekend(weekday: number): boolean {
   return (businessConfig.weekendDays as readonly number[]).includes(weekday);
 }
 
-export function ruleCovers(rule: RateRule, minuteOfDay: number, weekday: number): boolean {
-  if (rule.day_type === "weekday" && isWeekend(weekday)) return false;
-  if (rule.day_type === "weekend" && !isWeekend(weekday)) return false;
-  const { start_minute: s, end_minute: e } = rule;
-  if (s === e || (s === 0 && e === 1440)) return true;
-  return s < e ? minuteOfDay >= s && minuteOfDay < e : minuteOfDay >= s || minuteOfDay < e;
+/** Price per hour for a sport at a moment (IST weekday / weekend), or null if not set. */
+export function rateAt(rates: SportRate[], sport: string | null | undefined, at: Date): number | null {
+  const r = rates.find((x) => x.sport === sport);
+  if (!r) return null;
+  return isWeekend(istWeekday(at)) ? r.weekend_price : r.weekday_price;
 }
 
-/** Hourly rate for a court at a moment, or null if no rule covers it. */
-export function rateAt(rules: RateRule[], court: string, at: Date): number | null {
-  const minute = istMinutesOfDay(at);
-  const weekday = istWeekday(at);
-  const courtRules = rules.filter((r) => r.court_slug === court);
-  const specific = courtRules.find((r) => r.day_type !== "all" && ruleCovers(r, minute, weekday));
-  const general = courtRules.find((r) => r.day_type === "all" && ruleCovers(r, minute, weekday));
-  return (specific ?? general)?.price_per_hour ?? null;
-}
-
-/**
- * Total price for [start, end). Priced in small steps so a booking that runs from
- * a day rate into a night rate is charged correctly for each part.
- * Returns null when any part of the booking has no rate.
- */
+/** Total for [start, end), rounded to the rupee. Null when the sport has no price. */
 export function computeTotal(
-  rules: RateRule[],
-  court: string,
+  rates: SportRate[],
+  sport: string | null | undefined,
   start: Date,
   end: Date,
   stepMinutes = businessConfig.slotStepMinutes,
@@ -53,7 +36,7 @@ export function computeTotal(
   let total = 0;
   for (let t = start.getTime(); t < end.getTime(); t += stepMinutes * 60_000) {
     const slice = Math.min(stepMinutes, (end.getTime() - t) / 60_000);
-    const rate = rateAt(rules, court, new Date(t));
+    const rate = rateAt(rates, sport, new Date(t));
     if (rate == null) return null;
     total += (rate / 60) * slice;
   }

@@ -8,7 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { initialRange, RangePicker } from "@/components/staff/range-picker";
 import { useRangeBookings, useRangePayments } from "@/features/bookings/queries";
 import { COURTS } from "@/config/business";
-import { useCourtName, useNameOf } from "@/features/common/queries";
+import { useCourtName, useCustomerLabels, useNameOf } from "@/features/common/queries";
 import { useExpenses } from "@/features/expenses/queries";
 import { formatINR } from "@/lib/money";
 import { formatDate, formatHour } from "@/lib/time";
@@ -185,8 +185,9 @@ function BarList({ title, rows, useNames, labelNs, count }: {
   );
 }
 
-function TopCustomers({ rows }: { rows: { phone: string; name: string; count: number; value: number }[] }) {
+function TopCustomers({ rows }: { rows: { phone: string; name: string | null; count: number; value: number }[] }) {
   const t = useTranslations("staff.analytics");
+  const customer = useCustomerLabels();
   return (
     <Card>
       <CardTitle className="mb-2">{t("repeatCustomers")}</CardTitle>
@@ -198,7 +199,7 @@ function TopCustomers({ rows }: { rows: { phone: string; name: string; count: nu
           <tbody>
             {rows.map((c) => (
               <tr key={c.phone} className="border-t border-zinc-100">
-                <td className="py-2"><p className="font-medium">{c.name}</p><p className="text-xs text-zinc-500">{c.phone}</p></td>
+                <td className="py-2"><p className="font-medium">{customer.name(c.name)}</p><p className="text-xs text-zinc-500">{c.phone}</p></td>
                 <td>{c.count}</td>
                 <td className="text-right font-semibold">{formatINR(c.value)}</td>
               </tr>

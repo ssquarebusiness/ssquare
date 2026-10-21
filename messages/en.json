@@ -6,7 +6,8 @@
     "durationM": "{m} min",
     "sports": {
       "cricket": "Cricket",
-      "football": "Football"
+      "football": "Football",
+      "pickleball": "Pickleball"
     },
     "status": {
       "confirmed": "Booked",
@@ -37,7 +38,9 @@
     "courts": {
       "turf": "Turf (Cricket & Football)",
       "pickleball": "Pickleball Court"
-    }
+    },
+    "unknownCustomer": "Unknown customer",
+    "unknownPhone": "Not given"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -53,7 +56,8 @@
     "usernameTaken": "This username is already used.",
     "cannotDeactivateSelf": "You cannot turn off your own account.",
     "lastOwner": "At least one owner account must stay active.",
-    "passwordShort": "Password must be at least 8 characters."
+    "passwordShort": "Password must be at least 8 characters.",
+    "setupIncomplete": "Database setup is not complete. Please run the latest Supabase migration (see README)."
   },
   "pwa": {
     "title": "Install the SSquare app",
@@ -216,14 +220,14 @@
       "customDuration": "Choose duration",
       "selected": "{from} to {to}",
       "clash": "This time is already booked. Please choose another time.",
-      "phone": "Customer phone",
-      "name": "Customer name",
+      "phone": "Customer phone (optional)",
+      "name": "Customer name (optional)",
       "email": "Email (optional)",
       "repeatCustomer": "Old customer — name filled",
       "total": "Total amount (₹)",
-      "autoHint": "Calculated from rates. You can change it (discount etc.).",
+      "autoHint": "{rate} per hour for this day. You can change it (discount etc.).",
       "useAuto": "Use rate amount {amount}",
-      "noRate": "No rate set for this time. Please type the amount.",
+      "noRate": "No price set for this sport. Please type the amount.",
       "advance": "Advance paid (₹)",
       "advanceMethod": "Advance paid by",
       "advanceReceivedBy": "Advance received by",
@@ -406,24 +410,17 @@
       "confirmDeactivate": "Turn off {name}'s account? They will not be able to log in. Their history stays safe.",
       "activated": "Account turned on",
       "deactivated": "Account turned off",
-      "ratesTitle": "Rates (₹ per hour)",
-      "ratesHelp": "Used to auto-fill booking totals and shown on the website. Weekday/weekend rates win over \"All days\".",
-      "dayType": "Days",
+      "ratesTitle": "Prices (₹ per hour)",
+      "ratesHelp": "Set the price per hour for each sport. Bookings fill the total from these, and the website shows them.",
       "dayTypes": {
         "all": "All days",
         "weekday": "Mon – Fri",
         "weekend": "Sat – Sun"
       },
-      "pricePerHour": "Price per hour",
-      "hr": "hr",
-      "from": "From",
-      "to": "To",
-      "midnight": "12:00 AM (midnight)",
-      "addRate": "Add time slot",
-      "removeRate": "Remove",
       "save": "Save",
-      "ratesSaved": "Rates saved",
-      "ratesStepNote": "Totals are calculated every {step} minutes, so a booking crossing two rates is charged correctly."
+      "ratesSaved": "Prices saved",
+      "sport": "Sport",
+      "perHourNote": "Prices are per hour. 1½ hours is charged as 1.5 × the price."
     }
   },
   "public": {
@@ -542,7 +539,7 @@
         "weekday": "Mon – Fri",
         "weekend": "Sat – Sun"
       },
-      "ratesNote": "Rates may change on special days. Please confirm while booking.",
+      "ratesNote": "Rates are per hour. Prices may differ on special days — please confirm while booking.",
       "noRates": "Please call for rates.",
       "seeSlots": "See free slots",
       "learnMore": "Know more",
@@ -553,7 +550,8 @@
       "pickleball": {
         "title": "Pickleball Court",
         "text": "Nadiad's only synthetic pickleball court. Easy to learn, fun for all ages."
-      }
+      },
+      "perHourLabel": "Price per hour"
     },
     "amenities": {
       "title": "Facilities",

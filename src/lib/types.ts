@@ -21,8 +21,10 @@ export type Booking = {
   code: string;
   court_slug: CourtSlug;
   sport: string | null;
-  customer_name: string;
-  customer_phone: string;
+  /** Optional — shown as "Unknown customer" when empty. */
+  customer_name: string | null;
+  /** Optional 10-digit mobile number. */
+  customer_phone: string | null;
   customer_email: string | null;
   start_at: string;
   end_at: string;

@@ -6,10 +6,16 @@
 export const COURTS = ["turf", "pickleball"] as const;
 export type CourtSlug = (typeof COURTS)[number];
 
-/** Sports that can be played on each court (turf is common for cricket & football). */
-export const COURT_SPORTS: Record<CourtSlug, readonly string[]> = {
+export const SPORTS = ["cricket", "football", "pickleball"] as const;
+export type Sport = (typeof SPORTS)[number];
+
+/**
+ * Sports played on each court (turf is common for cricket & football).
+ * The first sport is the default when a court is chosen. Prices are set per sport.
+ */
+export const COURT_SPORTS: Record<CourtSlug, readonly Sport[]> = {
   turf: ["cricket", "football"],
-  pickleball: [],
+  pickleball: ["pickleball"],
 };
 
 export const businessConfig = {
@@ -17,13 +23,13 @@ export const businessConfig = {
   slotStepMinutes: 15,
 
   /** Quick duration chips in the booking form (minutes). */
-  durationPresets: [60, 90, 120, 180],
+  durationPresets: [60, 90, 120, 150, 180],
 
   /** Longest booking allowed (minutes). */
   maxBookingMinutes: 12 * 60,
 
   /** How far ahead the public can check availability (days). */
-  publicAvailabilityDaysAhead: 60,
+  publicAvailabilityDaysAhead: 90,
 
   /** Number of days shown in the quick date strip. */
   dateStripDays: 7,

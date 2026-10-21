@@ -8,6 +8,7 @@ import { notifyOwners } from "@/lib/push";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatTimeRange } from "@/lib/time";
 import type { ActionResult, Booking, Profile } from "@/lib/types";
+import { customerLabel } from "@/lib/customer";
 import {
   cancelBookingSchema,
   completeBookingSchema,
@@ -36,8 +37,8 @@ export async function createBookingAction(input: CreateBookingInput): Promise<Ac
   const { data, error } = await supabase.rpc("create_booking", {
     p_court_slug: v.court,
     p_sport: v.sport ?? null,
-    p_customer_name: v.name,
-    p_customer_phone: v.phone,
+    p_customer_name: v.name || null,
+    p_customer_phone: v.phone || null,
     p_customer_email: v.email || null,
     p_start_at: v.startAt,
     p_end_at: v.endAt,
@@ -48,12 +49,12 @@ export async function createBookingAction(input: CreateBookingInput): Promise<Ac
     p_advance_received_by: v.advance > 0 ? v.advanceReceivedBy : null,
     p_notes: v.notes ?? null,
   });
-  if (error) return { ok: false, error: errorKey(error) };
+  if (error) return { ok: false, error: errorKey(error, "bookings") };
 
   const booking = data as Booking;
   if (shouldNotify(actor)) {
     await notifyOwners(
-      { ...pushTemplates.created(actor.display_name, booking.customer_name, when(booking)), url: "/staff", tag: booking.id },
+      { ...pushTemplates.created(actor.display_name, customerLabel(booking.customer_name), when(booking)), url: "/staff", tag: booking.id },
       actor.id,
     ).catch(() => {});
   }
@@ -75,13 +76,13 @@ export async function completeBookingAction(input: CompleteBookingInput): Promis
     p_extra: v.extra,
     p_screenshot_path: v.screenshotPath ?? null,
   });
-  if (error) return { ok: false, error: errorKey(error) };
+  if (error) return { ok: false, error: errorKey(error, "bookings") };
 
   const booking = data as Booking;
   if (shouldNotify(actor)) {
     await notifyOwners(
       {
-        ...pushTemplates.completed(actor.display_name, booking.customer_name, formatINR(v.upi), formatINR(v.cash)),
+        ...pushTemplates.completed(actor.display_name, customerLabel(booking.customer_name), formatINR(v.upi), formatINR(v.cash)),
         url: "/staff",
         tag: booking.id,
       },
@@ -104,12 +105,12 @@ export async function cancelBookingAction(input: CancelBookingInput): Promise<Ac
     p_advance_action: v.advanceAction,
     p_reason: v.reason ?? null,
   });
-  if (error) return { ok: false, error: errorKey(error) };
+  if (error) return { ok: false, error: errorKey(error, "bookings") };
 
   const booking = data as Booking;
   if (shouldNotify(actor)) {
     await notifyOwners(
-      { ...pushTemplates.cancelled(actor.display_name, booking.customer_name, when(booking)), url: "/staff", tag: booking.id },
+      { ...pushTemplates.cancelled(actor.display_name, customerLabel(booking.customer_name), when(booking)), url: "/staff", tag: booking.id },
       actor.id,
     ).catch(() => {});
   }

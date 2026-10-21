@@ -4,6 +4,7 @@
 import { formatDate, formatTime, formatTimeRange, type DateStr } from "@/lib/time";
 import { signed, splitPayments } from "@/lib/payments";
 import type { BookingSummary, Expense, Payment } from "@/lib/types";
+import { customerLabel, phoneLabel } from "@/lib/customer";
 
 export type ReportInput = {
   from: DateStr;
@@ -36,8 +37,8 @@ export function buildReport(input: ReportInput) {
       date: formatDate(new Date(b.start_at), "en", { day: "2-digit", month: "short", year: "numeric" }),
       time: formatTimeRange(b.start_at, b.end_at),
       court: courtName(b.court_slug) + (b.sport ? ` (${cap(b.sport)})` : ""),
-      customer: b.customer_name,
-      phone: b.customer_phone,
+      customer: customerLabel(b.customer_name),
+      phone: phoneLabel(b.customer_phone),
       status: cap(b.status),
       total: b.total_amount,
       extra: b.extra_amount,
@@ -57,7 +58,7 @@ export function buildReport(input: ReportInput) {
     return {
       when: `${formatDate(new Date(p.created_at), "en", { day: "2-digit", month: "short" })} ${formatTime(p.created_at)}`,
       code: b?.code ?? "",
-      customer: b?.customer_name ?? "",
+      customer: b ? customerLabel(b.customer_name) : "",
       type: cap(p.kind),
       method: p.method.toUpperCase(),
       amount: signed(p),

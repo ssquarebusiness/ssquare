@@ -12,7 +12,7 @@ import { useToast } from "@/components/ui/toast";
 import { useCourtOptions, useProfiles, useRates } from "@/features/common/queries";
 import { useStaff } from "@/features/staff/context";
 import { formatINR, parseAmount } from "@/lib/money";
-import { computeTotal } from "@/lib/pricing";
+import { computeTotal, rateAt } from "@/lib/pricing";
 import { qk } from "@/lib/query-keys";
 import { overlaps } from "@/lib/slots";
 import { atIST, formatMinutes, istDateStr, istMinutesOfDay, type DateStr } from "@/lib/time";
@@ -50,7 +50,8 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   const activeStaff = (profiles ?? []).filter((p) => p.is_active);
 
   const [court, setCourt] = useState<CourtSlug>(initialCourt ?? "turf");
-  const [sport, setSport] = useState<string | null>(null);
+  // First sport of the court is pre-selected (turf → cricket, pickleball → pickleball) so a price shows at once.
+  const [sport, setSport] = useState<string>(COURT_SPORTS[initialCourt ?? "turf"][0]);
   const [date, setDate] = useState<DateStr>(initialDate);
   const [startMin, setStartMin] = useState(() => defaultStart(initialDate));
   const [preset, setPreset] = useState<number>(60);
@@ -59,7 +60,7 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [totalInput, setTotalInput] = useState<string | null>(null); // null = use auto price
-  const [advance, setAdvance] = useState("");
+  const [advance, setAdvance] = useState("0");
   const [advanceMethod, setAdvanceMethod] = useState<PaymentMethod>("upi");
   const [advanceBy, setAdvanceBy] = useState(me.id);
   const [bookedBy, setBookedBy] = useState<string | null>(me.role === "owner" ? me.id : null);
@@ -75,10 +76,14 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   const end = new Date(start.getTime() + duration * 60_000);
 
   const autoTotal = useMemo(
-    () => (rates ? computeTotal(rates, court, start, end) : null),
+    () => (rates ? computeTotal(rates, sport, start, end) : null),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [rates, court, start.getTime(), end.getTime()],
+    [rates, sport, start.getTime(), end.getTime()],
   );
+  const hourlyRate = rates ? rateAt(rates, sport, start) : null;
+
+  // A typed total is a one-off change: picking a new sport, date or time brings back the rate price.
+  useEffect(() => setTotalInput(null), [sport, date, startMin, duration]);
   const total = totalInput == null ? autoTotal ?? 0 : parseAmount(totalInput);
   const advanceAmount = parseAmount(advance);
 
@@ -95,7 +100,7 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
     if (p.length !== 10 || name) return;
     let cancelled = false;
     findCustomerByPhone(p).then((c) => {
-      if (cancelled || !c) return;
+      if (cancelled || !c?.customer_name) return;
       setName(c.customer_name);
       if (c.customer_email) setEmail(c.customer_email);
       setRepeat(true);
@@ -118,7 +123,7 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
   const submit = () => {
     const input = {
       court,
-      sport: COURT_SPORTS[court].length ? sport : null,
+      sport,
       name,
       phone: normalizePhone(phone),
       email: email.trim(),
@@ -166,11 +171,11 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
           <Chips
             name={t("court")}
             value={court}
-            onChange={(v) => { setCourt(v); setSport(null); }}
+            onChange={(v) => { setCourt(v); setSport(COURT_SPORTS[v][0]); }}
             options={courtOptions}
           />
         </Field>
-        {COURT_SPORTS[court].length > 0 && (
+        {COURT_SPORTS[court].length > 1 && (
           <Field label={t("sport")}>
             <Chips
               name={t("sport")}
@@ -248,14 +253,15 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
               <button type="button" onClick={() => setTotalInput(null)} className="inline-flex items-center gap-1 font-medium text-brand-700">
                 <RotateCcw className="size-3.5" /> {t("useAuto", { amount: formatINR(autoTotal) })}
               </button>
-            ) : t("autoHint")
+            ) : t("autoHint", { rate: formatINR(hourlyRate ?? 0) })
           }
         >
-          <Input id="total" inputMode="numeric" value={totalInput ?? String(autoTotal ?? "")}
+          <Input id="total" inputMode="numeric" placeholder="0" value={totalInput ?? String(autoTotal ?? "")}
             onChange={(e) => setTotalInput(e.target.value)} />
         </Field>
         <Field label={t("advance")} htmlFor="advance" error={fieldError("advance")}>
-          <Input id="advance" inputMode="numeric" placeholder="0" value={advance} onChange={(e) => setAdvance(e.target.value)} />
+          <Input id="advance" inputMode="numeric" placeholder="0" value={advance} onChange={(e) => setAdvance(e.target.value)}
+            onFocus={(e) => e.target.select()} />
         </Field>
         {advanceAmount > 0 && (
           <>
@@ -296,7 +302,7 @@ export function BookingForm({ initialDate, initialCourt }: { initialDate: DateSt
           advance={advanceAmount}
           onClose={() => {
             setCreated(null);
-            setName(""); setPhone(""); setEmail(""); setAdvance(""); setNotes(""); setTotalInput(null); setRepeat(false);
+            setName(""); setPhone(""); setEmail(""); setAdvance("0"); setNotes(""); setTotalInput(null); setRepeat(false);
           }}
         />
       )}

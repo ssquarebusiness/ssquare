@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { COURTS } from "@/config/business";
+import { SPORTS } from "@/config/business";
 import { DEFAULT_CARETAKER_PERMISSIONS, PERMISSIONS } from "@/config/permissions";
 import { staffFor } from "@/lib/auth/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -87,26 +87,35 @@ export async function resetStaffPasswordAction(profileId: string, password: stri
   return error ? { ok: false, error: "generic" } : { ok: true, data: undefined };
 }
 
-const ruleSchema = z.object({
-  day_type: z.enum(["all", "weekday", "weekend"]),
-  start_minute: z.number().int().min(0).max(1439),
-  end_minute: z.number().int().min(1).max(1440),
-  price_per_hour: z.number().int().min(0).max(100_000),
-});
+const sportRatesSchema = z
+  .array(
+    z.object({
+      sport: z.enum(SPORTS),
+      weekday_price: z.number().int().min(0).max(100_000),
+      weekend_price: z.number().int().min(0).max(100_000),
+    }),
+  )
+  .min(1)
+  .max(SPORTS.length);
 
-/** Replaces all rate rules of a court. New rules are inserted before old ones are removed. */
-export async function saveRatesAction(court: string, rules: z.infer<typeof ruleSchema>[]): Promise<ActionResult> {
+/** Owners set the weekday / weekend price per hour of each sport. */
+export async function saveSportRatesAction(rates: z.infer<typeof sportRatesSchema>): Promise<ActionResult> {
   if (!(await staffFor("owner"))) return { ok: false, error: "forbidden" };
-  if (!(COURTS as readonly string[]).includes(court)) return { ok: false, error: "invalidData" };
-  const parsed = z.array(ruleSchema).min(1).max(20).safeParse(rules);
+  const parsed = sportRatesSchema.safeParse(rates);
   if (!parsed.success) return { ok: false, error: "invalidData" };
 
   const supabase = await createClient();
-  const { data: old } = await supabase.from("rate_rules").select("id").eq("court_slug", court);
-  const { error } = await supabase.from("rate_rules").insert(parsed.data.map((r) => ({ ...r, court_slug: court })));
-  if (error) return { ok: false, error: "generic" };
-  if (old?.length) await supabase.from("rate_rules").delete().in("id", old.map((r) => r.id));
+  for (const r of parsed.data) {
+    const { error } = await supabase
+      .from("sport_rates")
+      .update({ weekday_price: r.weekday_price, weekend_price: r.weekend_price })
+      .eq("sport", r.sport);
+    if (error) {
+      console.error("saveSportRatesAction", error);
+      return { ok: false, error: "generic" };
+    }
+  }
 
-  revalidatePath("/", "layout"); // public website shows rates
+  revalidatePath("/", "layout"); // the public website shows these prices
   return { ok: true, data: undefined };
 }

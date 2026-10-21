@@ -13,7 +13,7 @@ Stack: Next.js 15 (App Router, TypeScript) · Tailwind CSS 4 · Supabase (Postgr
 
 ### Supabase
 1. Create a free project at [supabase.com](https://supabase.com), region **Mumbai (ap-south-1)**.
-2. **SQL Editor** → run [`supabase/migrations/20261014000001_init.sql`](supabase/migrations/20261014000001_init.sql), then [`supabase/seed.sql`](supabase/seed.sql).
+2. **SQL Editor** → run every file in [`supabase/migrations/`](supabase/migrations) **in date order**, one after the other. They create the tables, security rules, the two courts and the starting prices. When an update adds a new migration file, run just that new file.
 3. **Authentication → Sign In / Providers → Email**: turn **off** "Allow new users to sign up". Only owners create accounts, from the app.
 4. **Project Settings → API Keys**: copy the project URL, a **publishable key** (`sb_publishable_…`) and a **secret key** (`sb_secret_…`). Don't use the legacy `anon` / `service_role` keys: Supabase is retiring them by the end of 2026. Once the app works with the new keys, you can disable the legacy ones on the same page.
 
@@ -56,13 +56,13 @@ Website: http://localhost:3000. Staff app: http://localhost:3000/staff
 | Caretaker permission list and defaults | [`src/config/permissions.ts`](src/config/permissions.ts) |
 | WhatsApp booking message, enquiry message, push notification text | [`src/config/messages.ts`](src/config/messages.ts) |
 | All website / app wording (3 languages) | [`messages/en.json`](messages/en.json), [`gu.json`](messages/gu.json), [`hi.json`](messages/hi.json) |
-| **Rates, staff accounts, caretaker permissions** | In the app: **More → Settings** (no deploy needed) |
+| **Prices per sport (Mon–Fri / Sat–Sun), staff accounts, caretaker permissions** | In the app: **More → Settings** (no deploy needed) |
 
 **Photos:** put real photos in `public/images/gallery/` (JPG or WebP, about 1600 px wide) and list them in `siteConfig.gallery`. Next.js serves them resized and optimized.
 
 **Logo / app icon:** replace `scripts/assets/logo.svg`, then run `node scripts/generate-icons.mjs`.
 
-> Before going live, search the code for `TODO`. Every placeholder (phone numbers, address, map pin, rates in `seed.sql`) is marked.
+> Before going live, search the code for `TODO`. Every placeholder (phone numbers, address, map pin) is marked. Set the real prices in the app under **More → Settings → Prices**.
 
 ---
 
@@ -111,9 +111,9 @@ supabase/tests/        SQL behaviour checks (RLS + RPCs)
 ```bash
 npm run lint && npm run typecheck && npm test
 ```
-To run the SQL behaviour checks against a disposable Postgres with the migration applied:
+To apply all migrations to a throwaway local Postgres and run the SQL behaviour checks (needs `brew install postgresql`; your Supabase project is not touched):
 ```bash
-psql -f supabase/tests/rls_and_rpcs.sql
+./scripts/test-db.sh
 ```
 
 ---

@@ -58,8 +58,9 @@ export function computeAnalytics(
   const byCategory = new Map<string, number>();
   for (const e of expenses) byCategory.set(e.category, (byCategory.get(e.category) ?? 0) + e.amount);
 
-  const customers = new Map<string, { phone: string; name: string; count: number; value: number }>();
+  const customers = new Map<string, { phone: string; name: string | null; count: number; value: number }>();
   for (const b of live) {
+    if (!b.customer_phone) continue; // regulars are matched by phone number
     const c = customers.get(b.customer_phone) ?? { phone: b.customer_phone, name: b.customer_name, count: 0, value: 0 };
     c.count += 1;
     c.value += b.total_amount + b.extra_amount;

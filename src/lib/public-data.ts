@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { COURTS, type CourtSlug } from "@/config/business";
 import type { Locale } from "@/i18n/routing";
-import type { RateRule } from "@/lib/pricing";
+import type { SportRate } from "@/lib/pricing";
 import { hasSupabaseConfig } from "@/lib/supabase/env";
 import { createPublicClient } from "@/lib/supabase/server";
 import type { Court } from "@/lib/types";
@@ -15,13 +15,13 @@ const FALLBACK_NAMES: Record<CourtSlug, Record<Locale, string>> = {
 
 /** Courts + rates for public pages. Works (with fallbacks) even before Supabase is configured. */
 export const getPublicData = cache(async () => {
-  if (!hasSupabaseConfig()) return { courts: [] as Court[], rates: [] as RateRule[] };
+  if (!hasSupabaseConfig()) return { courts: [] as Court[], rates: [] as SportRate[] };
   const supabase = createPublicClient();
   const [courts, rates] = await Promise.all([
     supabase.from("courts").select("*").eq("is_active", true).order("sort"),
-    supabase.from("rate_rules").select("court_slug, day_type, start_minute, end_minute, price_per_hour").order("start_minute"),
+    supabase.from("sport_rates").select("sport, court_slug, weekday_price, weekend_price, sort").order("sort"),
   ]);
-  return { courts: (courts.data ?? []) as Court[], rates: (rates.data ?? []) as RateRule[] };
+  return { courts: (courts.data ?? []) as Court[], rates: (rates.data ?? []) as SportRate[] };
 });
 
 export async function getCourtNames(locale: Locale): Promise<Record<CourtSlug, string>> {

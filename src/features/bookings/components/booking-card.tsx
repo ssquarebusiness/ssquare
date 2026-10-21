@@ -3,7 +3,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { ChevronRight, Clock } from "lucide-react";
 import type { Locale } from "@/i18n/routing";
 import { Badge } from "@/components/ui/badge";
-import { useCourtName } from "@/features/common/queries";
+import { useCourtName, useCustomerLabels } from "@/features/common/queries";
 import { formatINR } from "@/lib/money";
 import { formatTimeRange } from "@/lib/time";
 import type { BookingSummary } from "@/lib/types";
@@ -20,6 +20,7 @@ export function BookingCard({ booking, onOpen, showDate }: { booking: BookingSum
   const t = useTranslations("staff.booking");
   const locale = useLocale() as Locale;
   const courtName = useCourtName();
+  const customer = useCustomerLabels();
   const due = booking.status === "confirmed" && booking.remaining_amount > 0;
 
   return (
@@ -33,7 +34,7 @@ export function BookingCard({ booking, onOpen, showDate }: { booking: BookingSum
       <div className={cn("w-1.5 self-stretch rounded-full", booking.court_slug === "turf" ? "bg-brand-600" : "bg-ball-500")} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-base font-bold text-zinc-900">{booking.customer_name}</p>
+          <p className="truncate text-base font-bold text-zinc-900">{customer.name(booking.customer_name)}</p>
           <StatusBadge status={booking.status} />
         </div>
         <p className="mt-0.5 flex items-center gap-1 text-sm text-zinc-600">

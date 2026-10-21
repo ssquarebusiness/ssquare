@@ -22,7 +22,7 @@ export async function createExpenseAction(input: ExpenseInput): Promise<ActionRe
     payment_method: v.paymentMethod,
     created_by: actor.id,
   });
-  return error ? { ok: false, error: errorKey(error) } : { ok: true, data: undefined };
+  return error ? { ok: false, error: errorKey(error, "expenses") } : { ok: true, data: undefined };
 }
 
 export async function deleteExpenseAction(id: string): Promise<ActionResult> {
@@ -30,5 +30,5 @@ export async function deleteExpenseAction(id: string): Promise<ActionResult> {
   if (!actor) return { ok: false, error: "forbidden" };
   const supabase = await createClient();
   const { error } = await supabase.from("expenses").delete().eq("id", id);
-  return error ? { ok: false, error: errorKey(error) } : { ok: true, data: undefined };
+  return error ? { ok: false, error: errorKey(error, "expenses") } : { ok: true, data: undefined };
 }

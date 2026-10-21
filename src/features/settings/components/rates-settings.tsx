@@ -1,112 +1,90 @@
 "use client";
 import { useEffect, useState, useTransition } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Trash2 } from "lucide-react";
-import { businessConfig } from "@/config/business";
-import type { Locale } from "@/i18n/routing";
+import { SPORTS, type Sport } from "@/config/business";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input, Select } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/toast";
-import { COURTS } from "@/config/business";
 import { useCourtName, useRates } from "@/features/common/queries";
 import { parseAmount } from "@/lib/money";
-import type { DayType } from "@/lib/pricing";
 import { qk } from "@/lib/query-keys";
-import { formatMinutes } from "@/lib/time";
-import { saveRatesAction } from "../actions";
+import { saveSportRatesAction } from "../actions";
 
-type Draft = { day_type: DayType; start_minute: number; end_minute: number; price: string };
+type Draft = Record<Sport, { weekday: string; weekend: string }>;
 
-const STEP = 30;
-const TIME_OPTIONS = Array.from({ length: 1440 / STEP + 1 }, (_, i) => i * STEP);
-
-/** Owners edit ₹/hour per court and time window. Changes apply to new bookings and the website. */
+/** Owners set ₹/hour per sport for weekdays and weekends. Used for booking totals and shown on the website. */
 export function RatesSettings() {
   const t = useTranslations("staff.settings");
-  const { data: rates, isLoading } = useRates();
-  if (isLoading) return <Spinner />;
-  return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-bold">{t("ratesTitle")}</h2>
-      <p className="text-sm text-zinc-500">{t("ratesHelp")}</p>
-      {COURTS.map((slug) => (
-        <CourtRates key={slug} court={slug} initial={(rates ?? []).filter((r) => r.court_slug === slug)} />
-      ))}
-    </section>
-  );
-}
-
-function CourtRates({ court, initial }: { court: string; initial: { day_type: DayType; start_minute: number; end_minute: number; price_per_hour: number }[] }) {
-  const t = useTranslations("staff.settings");
+  const ts = useTranslations("common.sports");
   const te = useTranslations("errors");
-  const locale = useLocale() as Locale;
   const courtName = useCourtName();
   const toast = useToast();
   const qc = useQueryClient();
-  const [rows, setRows] = useState<Draft[]>([]);
+  const { data: rates, isLoading } = useRates();
+  const [draft, setDraft] = useState<Draft | null>(null);
   const [pending, start] = useTransition();
 
   useEffect(() => {
-    setRows(initial.map((r) => ({ day_type: r.day_type, start_minute: r.start_minute, end_minute: r.end_minute, price: String(r.price_per_hour) })));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(initial)]);
+    if (!rates) return;
+    const find = (s: Sport) => rates.find((r) => r.sport === s);
+    setDraft(
+      Object.fromEntries(
+        SPORTS.map((s) => [s, { weekday: String(find(s)?.weekday_price ?? ""), weekend: String(find(s)?.weekend_price ?? "") }]),
+      ) as Draft,
+    );
+  }, [rates]);
 
-  const update = (i: number, patch: Partial<Draft>) => setRows((r) => r.map((x, j) => (j === i ? { ...x, ...patch } : x)));
+  if (isLoading || !draft) return <Spinner />;
+
+  const set = (s: Sport, key: "weekday" | "weekend", value: string) =>
+    setDraft((d) => (d ? { ...d, [s]: { ...d[s], [key]: value } } : d));
 
   const save = () =>
     start(async () => {
-      const res = await saveRatesAction(court, rows.map((r) => ({
-        day_type: r.day_type, start_minute: r.start_minute, end_minute: r.end_minute, price_per_hour: parseAmount(r.price),
-      })));
+      const res = await saveSportRatesAction(
+        SPORTS.map((s) => ({ sport: s, weekday_price: parseAmount(draft[s].weekday), weekend_price: parseAmount(draft[s].weekend) })),
+      );
       if (!res.ok) return toast(te(res.error), "error");
       qc.invalidateQueries({ queryKey: qk.rates });
       toast(t("ratesSaved"));
     });
 
-  const timeLabel = (m: number) => (m === 1440 ? t("midnight") : formatMinutes(m, locale));
-
   return (
-    <Card className="space-y-3">
-      <h3 className="font-bold">{courtName(court)}</h3>
-      {rows.map((r, i) => (
-        <div key={i} className="space-y-2 rounded-xl bg-zinc-50 p-3">
-          <div className="grid grid-cols-2 gap-2">
-            <Select aria-label={t("dayType")} value={r.day_type} onChange={(e) => update(i, { day_type: e.target.value as DayType })}>
-              {(["all", "weekday", "weekend"] as const).map((d) => <option key={d} value={d}>{t(`dayTypes.${d}`)}</option>)}
-            </Select>
-            <div className="relative">
-              <span className="absolute top-1/2 left-3 -translate-y-1/2 text-zinc-500">₹</span>
-              <Input aria-label={t("pricePerHour")} inputMode="numeric" className="pr-12 pl-7" value={r.price}
-                onChange={(e) => update(i, { price: e.target.value })} />
-              <span className="absolute top-1/2 right-3 -translate-y-1/2 text-sm text-zinc-500">/{t("hr")}</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-[1fr_auto_1fr_auto] items-center gap-2">
-            <Select aria-label={t("from")} value={r.start_minute} onChange={(e) => update(i, { start_minute: Number(e.target.value) })}>
-              {TIME_OPTIONS.slice(0, -1).map((m) => <option key={m} value={m}>{timeLabel(m)}</option>)}
-            </Select>
-            <span className="text-zinc-500">–</span>
-            <Select aria-label={t("to")} value={r.end_minute} onChange={(e) => update(i, { end_minute: Number(e.target.value) })}>
-              {TIME_OPTIONS.slice(1).map((m) => <option key={m} value={m}>{timeLabel(m)}</option>)}
-            </Select>
-            <button onClick={() => setRows((x) => x.filter((_, j) => j !== i))} aria-label={t("removeRate")}
-              className="rounded-lg p-2 text-zinc-400 hover:bg-rose-50 hover:text-rose-600">
-              <Trash2 className="size-5" />
-            </button>
-          </div>
+    <section className="space-y-3">
+      <h2 className="text-lg font-bold">{t("ratesTitle")}</h2>
+      <p className="text-sm text-zinc-500">{t("ratesHelp")}</p>
+      <Card className="space-y-4">
+        <div className="grid grid-cols-[1fr_6.5rem_6.5rem] gap-2 text-xs font-semibold text-zinc-500 uppercase">
+          <span>{t("sport")}</span>
+          <span>{t("dayTypes.weekday")}</span>
+          <span>{t("dayTypes.weekend")}</span>
         </div>
-      ))}
-      <div className="flex gap-2">
-        <Button variant="outline" size="sm"
-          onClick={() => setRows((x) => [...x, { day_type: "all", start_minute: 360, end_minute: 1080, price: "" }])}>
-          <Plus className="size-4" /> {t("addRate")}
-        </Button>
-        <Button size="sm" loading={pending} disabled={rows.length === 0} onClick={save} className="ml-auto">{t("save")}</Button>
-      </div>
-      <p className="text-xs text-zinc-500">{t("ratesStepNote", { step: businessConfig.slotStepMinutes })}</p>
-    </Card>
+        {SPORTS.map((s) => {
+          const court = rates?.find((r) => r.sport === s)?.court_slug;
+          return (
+            <div key={s} className="grid grid-cols-[1fr_6.5rem_6.5rem] items-center gap-2">
+              <div>
+                <p className="font-semibold">{ts(s)}</p>
+                {court && <p className="text-xs text-zinc-500">{courtName(court)}</p>}
+              </div>
+              {(["weekday", "weekend"] as const).map((k) => (
+                <div key={k} className="relative">
+                  <span className="absolute top-1/2 left-3 -translate-y-1/2 text-zinc-500">₹</span>
+                  <Input aria-label={`${ts(s)} – ${t(`dayTypes.${k}`)}`} inputMode="numeric" className="pl-7"
+                    value={draft[s][k]} onChange={(e) => set(s, k, e.target.value)} onFocus={(e) => e.target.select()} />
+                </div>
+              ))}
+            </div>
+          );
+        })}
+        <div className="flex items-center justify-between gap-3 pt-1">
+          <p className="text-xs text-zinc-500">{t("perHourNote")}</p>
+          <Button loading={pending} onClick={save}>{t("save")}</Button>
+        </div>
+      </Card>
+    </section>
   );
 }
