@@ -68,6 +68,8 @@ Website: http://localhost:3000. Staff app: http://localhost:3000/staff
 
 ## 3. Deploy (Vercel, free)
 
+> **Full step-by-step guide:** [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — GitHub access, Supabase, environment variables, domain, backups, phone install and troubleshooting.
+
 1. Push this repo to GitHub and import it in Vercel.
 2. Add every variable from `.env.local` (except `SEED_*`) under **Project → Settings → Environment Variables**.
 3. Deploy, then add your domain. `vercel.json` sets the Mumbai region and a **daily cron**, which:
